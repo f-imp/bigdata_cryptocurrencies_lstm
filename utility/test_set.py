@@ -6,7 +6,7 @@ import random
 import ast
 import numpy as np
 
-np.random.seed(5)
+np.random.seed(0)
 
 
 def generate_testset(path_data, filename, start, end, number_samples, output_path, filename_output):
