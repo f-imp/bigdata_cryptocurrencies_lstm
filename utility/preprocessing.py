@@ -21,6 +21,8 @@ def generate_indicators(filepath, name_feature, lookback_list, output_path, file
     return
 
 
+# Il codice dell'LSTM include già il passaggio di normalizzazione del dataset
+# Quindi questi file non vengono più utilizzati
 def normalized(filepath, features_to_exclude, output_path, filename_output):
     data = pd.read_csv(filepath, sep=',')
     scaler = MinMaxScaler()

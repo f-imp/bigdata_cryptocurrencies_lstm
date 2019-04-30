@@ -59,7 +59,8 @@ def train_test_split_w_date(features, dataset_tensor_version, single_date):
     return np.array(train), np.array(test)
 
 
-def train_model(x_train, y_train, x_test, y_test, lstm_neurons, dropout, epochs, batch_size, model_path='', model=None):
+def train_model(x_train, y_train, x_test, y_test, lstm_neurons, dropout, epochs, batch_size, dimension_last_layer,
+                model_path='', model=None):
     callbacks = [
         # Early stopping sul train o validation set? pperche qui sara' allenato su un solo esempio di test,
         # quindi converrebbe controllare la train_loss (loss)
@@ -74,7 +75,7 @@ def train_model(x_train, y_train, x_test, y_test, lstm_neurons, dropout, epochs,
         model = Sequential()
         model.add(LSTM(lstm_neurons, input_shape=(x_train.shape[1], x_train.shape[2])))
         model.add(Dropout(dropout))
-        model.add(Dense(1))
+        model.add(Dense(dimension_last_layer))
         model.compile(loss='mean_squared_error', optimizer='adam', metrics=['acc', 'mae'])
         history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test),
                             verbose=1, shuffle=False, callbacks=callbacks)

@@ -68,14 +68,15 @@ for s in series:
             if data_tester == Testing_Set[0]:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          dropout=0.2,
-                                                         epochs=1,
+                                                         epochs=100,
                                                          batch_size=256,
+                                                         dimension_last_layer=1,
                                                          model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
             else:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          dropout=0.2,
-                                                         epochs=1,
-                                                         batch_size=256, model=model,
+                                                         epochs=100,
+                                                         batch_size=256, dimension_last_layer=1, model=model,
                                                          model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
             # Tiriamo fuori la predizione per ogni esempio di test
             test_prediction = model.predict(x_test)
