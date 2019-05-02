@@ -21,6 +21,7 @@ for crypto in cryptocurrenciesSymbols:
     for line in fileToRead:
         #per prendere quelli giusti controllo se sta la virgola a sinistra e "a capo" a destra del simbolo
         if line.count(","+crypto+"\n") >0:
+            line = line[:line.find(" ")] + line[line.find(","):]
             fileToWrite.write(line)
             #debug print
             #print(line[:-1])
