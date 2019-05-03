@@ -1,4 +1,4 @@
-#cancellare crypto_expreriment_one prima di runnare
+# cancellare crypto_expreriment_one prima di runnare
 
 import os
 import pandas as pd
@@ -7,8 +7,10 @@ from itertools import product
 import numpy as np
 
 from crypto_utility import test_set, experiments
+from crypto_utility.report_data import create_report_experiment_one
 
 np.random.seed(0)
+
 EXPERIMENT = "../crypto_experiment_one"
 TENSOR_PATH = "../crypto_TensorData"
 RESULT_PATH = "crypto_Result"
@@ -16,11 +18,11 @@ DATA_PATH = "../crypto_preprocessing/step2_normalized/"
 
 # Parameters of experiments
 series = os.listdir(DATA_PATH)
-temporal_sequence_considered = [30, 60, 100]
+temporal_sequence_considered = [30, 100, 200]
 number_neurons_LSTM = [128, 256]
 Testing_Set = test_set.get_testset("../crypto_testset/from_2017_06_26_until_2017_06_26/test_set.txt")
 features_to_exclude_from_scaling = ['Symbol']
-#features_to_exclude_from_scaling = ['stock_id', 'ChangePercentage', 'TradedQuantity', 'TotalTradedVolumeIncludingBlocks']
+# features_to_exclude_from_scaling = ['stock_id', 'ChangePercentage', 'TradedQuantity', 'TotalTradedVolumeIncludingBlocks']
 
 # Create Structure of Folder - according to defined path
 os.mkdir(EXPERIMENT)
@@ -87,6 +89,11 @@ for s in series:
             test_prediction_denorm = scaler.inverse_transform(test_prediction)
             rmse_denorm = experiments.get_RMSE(y_test_denorm, test_prediction_denorm)
 
+            y_test = float(y_test)
+            test_prediction = float(test_prediction)
+            y_test_denorm = float(y_test_denorm)
+            test_prediction_denorm = float(test_prediction_denorm)
+
             # Salvo i risultati nei dizionari
             predictions_file['symbol'].append(stock_name)
             predictions_file['date'].append(data_tester)
@@ -103,3 +110,6 @@ for s in series:
             EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
         pd.DataFrame(data=errors_file).to_csv(
             EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
+
+create_report_experiment_one(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
+                             name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH)

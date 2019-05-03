@@ -29,8 +29,15 @@ def fromtemporal_totensor(dataset, window_considered, output_path, output_name):
         return z
     except FileNotFoundError as e:
         print('Versione supervisionata del dataset non trovata, creazione in corso...')
+        # 1 array
+        # con "window_considered" righe
+        # "dataset.shape[1]" colonne
         z = np.zeros((1, window_considered, dataset.shape[1]))
+        # per i che varia
+        # da 0 fino
+        # al (totale - finestra + 1)
         for i in range(dataset.shape[0] - window_considered + 1):
+            # aggiungo ad una copia di (z)
             z = np.append(z, dataset[i:i + window_considered, :].reshape(1, window_considered, dataset.shape[1]),
                           axis=0)
         output_path += "/crypto_"
@@ -78,10 +85,10 @@ def train_model(x_train, y_train, x_test, y_test, lstm_neurons, dropout, epochs,
         model.add(Dense(dimension_last_layer))
         model.compile(loss='mean_squared_error', optimizer='adam', metrics=['acc', 'mae'])
         history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test),
-                            verbose=1, shuffle=False, callbacks=callbacks)
+                            verbose=2, shuffle=False, callbacks=callbacks)
     else:
         history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test),
-                            verbose=1, shuffle=False, callbacks=callbacks)
+                            verbose=2, shuffle=False, callbacks=callbacks)
     return model, history
 
 
