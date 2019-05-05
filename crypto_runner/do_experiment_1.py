@@ -7,7 +7,6 @@ from itertools import product
 import numpy as np
 
 from crypto_utility import test_set, experiments
-from crypto_utility.report_data import create_report_experiment_one
 
 np.random.seed(0)
 
@@ -15,6 +14,7 @@ EXPERIMENT = "../crypto_experiment_one"
 TENSOR_PATH = "../crypto_TensorData"
 RESULT_PATH = "crypto_Result"
 DATA_PATH = "../crypto_preprocessing/step2_normalized/"
+REPORT_FOLDER_NAME = "Report"
 
 # Parameters of experiments
 series = os.listdir(DATA_PATH)
