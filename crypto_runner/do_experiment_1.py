@@ -71,14 +71,14 @@ for s in series:
             if data_tester == Testing_Set[0]:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          dropout=0.2,
-                                                         epochs=100,
+                                                         epochs=1,
                                                          batch_size=256,
                                                          dimension_last_layer=1,
                                                          model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
             else:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          dropout=0.2,
-                                                         epochs=100,
+                                                         epochs=1,
                                                          batch_size=256, dimension_last_layer=1, model=model,
                                                          model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
             # Tiriamo fuori la predizione per ogni esempio di test
@@ -110,6 +110,3 @@ for s in series:
             EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
         pd.DataFrame(data=errors_file).to_csv(
             EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
-
-create_report_experiment_one(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
-                             name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH)
