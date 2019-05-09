@@ -30,7 +30,7 @@ REPORT_FOLDER_NAME = "Report"
 # Parameters of experiments
 series = os.listdir(DATA_PATH)
 temporal_sequence_considered = [30, 100, 200]
-number_neurons_LSTM = [128, 256]
+number_neurons_LSTM = [32,64,128, 256, 512, 1024]
 Testing_Set = test_set.get_testset("../crypto_testset/from_2017_06_26_until_2017_06_26/test_set.txt")
 features_to_exclude_from_scaling = ['Symbol_1','Symbol_2','Symbol_3','Symbol_4','Symbol_5','Symbol_6','Symbol_7','Symbol_8','Symbol_9','Symbol_10']
 
@@ -83,14 +83,14 @@ for s in series:
             if data_tester == Testing_Set[0]:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          dropout=0.2,
-                                                         epochs=1,
+                                                         epochs=100,
                                                          batch_size=256,
                                                          dimension_last_layer=10,
                                                          model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
             else:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          dropout=0.2,
-                                                         epochs=1,
+                                                         epochs=100,
                                                          batch_size=256, dimension_last_layer=10, model=model,
                                                          model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
 
