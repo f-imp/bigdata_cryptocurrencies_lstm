@@ -36,3 +36,16 @@ def normalized(filepath, features_to_exclude, output_path, filename_output):
             data[col + '_normalized'] = pd.Series(normalized.reshape(-1))
     data.to_csv(output_path + filename_output + "_normalized.csv", index=False)
     return
+
+
+def generate_normal(filepath, output_path, filename_output):
+    data = pd.read_csv(filepath, sep=',')
+    if filepath.count("BTC") > 0:
+        data["DateTime"] = pd.to_datetime(data["DateTime"], dayfirst=True)
+        data = data.sort_values('DateTime', ascending=True)
+    else:
+        data["DateTime"] = pd.to_datetime(data["DateTime"])
+        data = data.sort_values('DateTime', ascending=True)
+    data.fillna(value=0, inplace=True)
+    data.to_csv(output_path + filename_output + ".csv", index=False)
+    return

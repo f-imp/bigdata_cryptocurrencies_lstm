@@ -11,13 +11,16 @@ def prepare_input_forecasting(path_series_with_indicators, features_to_exclude):
     data = pd.read_csv(path_series_with_indicators, sep=',')
     data['DateTime'] = pd.to_datetime(data['DateTime'])
     features = data.columns
+    print(features)
     features = [f for f in features if f not in features_to_exclude]
+    print(features)
     features_without_date = [f for f in features if f != 'DateTime']
     dataset = data[features]
     scaler = MinMaxScaler()
     scaler_target_feature = MinMaxScaler()
     scaler.fit(dataset.loc[:, dataset.columns != 'DateTime'])
-    scaler_target_feature.fit(dataset.values[:, features.index('Close')].reshape(-1, 1))
+    #scaler_target_feature.fit(dataset.values[:, features.index('Close')].reshape(-1, 1))
+    scaler_target_feature.fit(dataset.loc[:, [col for col in dataset.columns if col.startswith('Close')]])
     dataset.loc[:, dataset.columns != 'DateTime'] = scaler.transform(dataset.loc[:, dataset.columns != 'DateTime'])
     return dataset, features, features_without_date, scaler_target_feature
 
@@ -35,8 +38,10 @@ def fromtemporal_totensor(dataset, window_considered, output_path, output_name):
         z = np.zeros((1, window_considered, dataset.shape[1]))
         # per i che varia
         # da 0 fino
-        # al (totale - finestra + 1)
+        # al (totale - finestra + 1)        ]
+        print("Ci metto parecchio dovrai aspettare")
         for i in range(dataset.shape[0] - window_considered + 1):
+            if i%int((dataset.shape[0] - window_considered + 1)/10)==0: print(str(int((i/(dataset.shape[0] - window_considered + 1))*100)) + "%")
             # aggiungo ad una copia di (z)
             z = np.append(z, dataset[i:i + window_considered, :].reshape(1, window_considered, dataset.shape[1]),
                           axis=0)
@@ -84,10 +89,8 @@ def train_model(x_train, y_train, x_test, y_test, lstm_neurons, dropout, epochs,
         model.add(Dropout(dropout))
         model.add(Dense(dimension_last_layer))
         model.compile(loss='mean_squared_error', optimizer='adam', metrics=['acc', 'mae'])
-        history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test),
-                            verbose=2, shuffle=False, callbacks=callbacks)
-    else:
-        history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test),
+
+    history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test),
                             verbose=2, shuffle=False, callbacks=callbacks)
     return model, history
 
