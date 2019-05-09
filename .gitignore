@@ -1,11 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
-/crypto_TensorData/ETH/
-/crypto_TensorData/DOGE/
-/crypto_TensorData/LTC/
-/crypto_TensorData/XMR/
-/crypto_TensorData/XEM/
-/crypto_TensorData/DASH/
-/crypto_TensorData/XLM/
-/crypto_TensorData/BTC/
-/crypto_TensorData/ETC/
-/crypto_TensorData/XRP/
+/crypto_TensorData/*
+
+.npy
+.ipynb
+.idea/workspace.xml
