@@ -100,7 +100,60 @@ def plot_report(path_file, x_data, column_of_data, label_for_values_column, labe
     plt.xlabel(label_x, fontsize=10)
     # plt.hlines(np.min(mean_rmse_normalized), 0, len(configurations), linestyles='-', colors='red', linewidth=2, label="Min value")
     # plt.hlines(np.max(mean_rmse_normalized), 0, len(configurations), linestyles='-', colors='red', linewidth=2, label=str(round(np.max(mean_rmse_normalized),4)))
-    plt.xticks(index, configurations, fontsize=5, rotation=30)
+    plt.xticks(index, configurations, fontsize=7, rotation=90)
     plt.title(title_img)
     f.savefig(destination + name_file_output, bbox_inches='tight', pad_inches=0)
     # plt.show()
+
+
+def report_configurations_exp2(name_folder_experiment, name_folder_result_experiment, name_folder_report,
+                               name_files_output):
+    os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
+
+    versions_dataset = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/")
+
+    for v in versions_dataset:
+        print(v)
+        os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + v + "/", exist_ok=True)
+        dizionario_report_totale = {"configuration": [], "Average_RMSE_norm": [], "Average_RMSE_denorm": []}
+        confs = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/" + v)
+        confs.sort(reverse=True)
+        for c in confs:
+            print(c)
+            errors_data = pd.read_csv(
+                name_folder_experiment + "/" + name_folder_result_experiment + "/" + v + "/" + c + "/stats/errors.csv")
+            dizionario_report_totale["configuration"].append(c)
+            dizionario_report_totale["Average_RMSE_norm"].append(float(errors_data["rmse_norm"]))
+            dizionario_report_totale["Average_RMSE_denorm"].append(float(errors_data["rmse_denorm"]))
+        pd.DataFrame(dizionario_report_totale).to_csv(
+            name_folder_experiment + "/" + name_folder_report + "/" + v + "/" + name_files_output + ".csv")
+        plot_report(
+            path_file=name_folder_experiment + "/" + name_folder_report + "/" + v + "/" + name_files_output + ".csv",
+            x_data="configuration", column_of_data="Average_RMSE_norm", label_for_values_column="RMSE (Average)",
+            label_x="Configurations", title_img="Average RMSE - Configurations Oriented",
+            destination=name_folder_experiment + "/" + name_folder_report + "/" + v + "/",
+            name_file_output="bargraph_RMSE_configurations_oriented")
+
+
+def report_configurations_exp3(name_folder_experiment, name_folder_result_experiment, name_folder_report,
+                               name_files_output):
+    os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
+
+    name_folder_result_experiment += "/horizontal"
+    confs = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/")
+    confs.sort(reverse=True)
+    dizionario_report_totale = {"configuration": [], "Average_RMSE_norm": [], "Average_RMSE_denorm": []}
+    for c in confs:
+        errors_data = pd.read_csv(
+            name_folder_experiment + "/" + name_folder_result_experiment + "/" + c + "/stats/errors.csv")
+        dizionario_report_totale["configuration"].append(c)
+        dizionario_report_totale["Average_RMSE_norm"].append(float(errors_data["rmse_norm"]))
+        dizionario_report_totale["Average_RMSE_denorm"].append(float(errors_data["rmse_denorm"]))
+    pd.DataFrame(dizionario_report_totale).to_csv(
+        name_folder_experiment + "/" + name_folder_report + "/" + name_files_output + ".csv")
+    plot_report(
+        path_file=name_folder_experiment + "/" + name_folder_report + "/" + name_files_output + ".csv",
+        x_data="configuration", column_of_data="Average_RMSE_norm", label_for_values_column="RMSE (Average)",
+        label_x="Configurations", title_img="Average RMSE - Configurations Oriented",
+        destination=name_folder_experiment + "/" + name_folder_report + "/",
+        name_file_output="bargraph_RMSE_configurations_oriented")

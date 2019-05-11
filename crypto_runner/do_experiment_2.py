@@ -7,12 +7,14 @@ from itertools import product
 import numpy as np
 
 from crypto_utility import test_set, experiments
+from crypto_utility.report_data import report_configurations_exp2
 
 np.random.seed(0)
 EXPERIMENT = "../crypto_experiment_two"
 TENSOR_PATH = "../crypto_TensorData"
 RESULT_PATH = "crypto_Result"
 DATA_PATH = "../crypto_preprocessing/step3_alldata/"
+REPORT_FOLDER_NAME = "Report"
 
 # Parameters of experiments
 series = os.listdir(DATA_PATH)
@@ -88,6 +90,7 @@ for s in series:
             rmse_denorm = experiments.get_RMSE(y_test_denorm, test_prediction_denorm)
 
 
+
             # Salvo i risultati nei dizionari
             predictions_file['symbol'].append(stock_name)
             predictions_file['date'].append(data_tester)
@@ -105,3 +108,5 @@ for s in series:
         pd.DataFrame(data=errors_file).to_csv(
             EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
+report_configurations_exp2(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+                           name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
