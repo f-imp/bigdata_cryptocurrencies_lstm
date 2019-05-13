@@ -1,6 +1,6 @@
 import os
 
-from crypto_utility.report_data import report_configurations, report_stockseries, report_configurations_exp2, \
+from crypto_utility.report_data import report_configurations_exp1, report_stockseries_exp1, report_configurations_exp2, \
     report_configurations_exp3
 
 # EXPERIMENT ONE
@@ -14,11 +14,11 @@ from crypto_utility.report_data import report_configurations, report_stockseries
 # temporal_sequence_considered = [30, 100, 200]
 # number_neurons_LSTM = [128, 256]
 
-# report_configurations(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
+# report_configurations_exp1(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
 #                       name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
 #                       name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
 #
-# report_stockseries(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+# report_stockseries_exp1(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
 #                    name_folder_report=REPORT_FOLDER_NAME,
 #                    name_files_output="report")
 

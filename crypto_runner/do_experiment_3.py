@@ -1,6 +1,5 @@
 #cancellare crypto_expreriment_three prima di runnare
 
-
 import os
 import numpy as np
 import pandas as pd
@@ -17,9 +16,9 @@ from keras.models import load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from itertools import product
 from crypto_utility import test_set, experiments
+from crypto_utility.report_data import report_configurations_exp3
 
 np.random.seed(0)
-
 
 EXPERIMENT = "../crypto_experiment_three"
 TENSOR_PATH = "../crypto_TensorData"
@@ -125,6 +124,8 @@ for s in series:
         pd.DataFrame(data=errors_file).to_csv(
             EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
+report_configurations_exp3(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+                           name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
 
 def seq_matrix_mult(data, window, csv_name):
     path = 'data/supervised_style/'

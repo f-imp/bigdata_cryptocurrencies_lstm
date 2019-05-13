@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from crypto_utility.experiments import get_RMSE
 
 
-def report_configurations(temporal_sequence_used, neurons_used, name_folder_experiment,
+def report_configurations_exp1(temporal_sequence_used, neurons_used, name_folder_experiment,
                           name_folder_result_experiment, name_folder_report, name_output_files):
     kind_of_report = "configurations_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
@@ -49,7 +49,7 @@ def report_configurations(temporal_sequence_used, neurons_used, name_folder_expe
         name_file_output="bargraph_RMSE_configurations_oriented")
 
 
-def report_stockseries(name_folder_experiment, name_folder_result_experiment, name_folder_report, name_files_output):
+def report_stockseries_exp1(name_folder_experiment, name_folder_result_experiment, name_folder_report, name_files_output):
     kind_of_report = "stockseries_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)

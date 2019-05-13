@@ -7,6 +7,7 @@ from itertools import product
 import numpy as np
 
 from crypto_utility import test_set, experiments
+from crypto_utility.report_data import report_configurations_exp1, report_stockseries_exp1
 
 np.random.seed(0)
 
@@ -110,3 +111,11 @@ for s in series:
             EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
         pd.DataFrame(data=errors_file).to_csv(
             EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
+
+report_configurations_exp1(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
+                      name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+                      name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
+
+report_stockseries_exp1(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+                   name_folder_report=REPORT_FOLDER_NAME,
+                   name_files_output="report")

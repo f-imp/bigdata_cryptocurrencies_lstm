@@ -7,8 +7,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
 
-def prepare_input_forecasting(path_series_with_indicators, features_to_exclude):
-    data = pd.read_csv(path_series_with_indicators, sep=',')
+def prepare_input_forecasting(path_series, features_to_exclude):
+    data = pd.read_csv(path_series, sep=',')
     data['DateTime'] = pd.to_datetime(data['DateTime'])
     features = data.columns
     print(features)
