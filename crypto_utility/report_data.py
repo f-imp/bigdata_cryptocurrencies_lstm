@@ -20,14 +20,12 @@ def report_configurations(temporal_sequence_used, neurons_used, name_folder_expe
         configuration = "LSTM_{}_neurons_{}_days".format(n, ts)
         model_report = {'stock_names': [], 'rmse_list_norm': [], 'rmse_list_denorm': []}
         for s in stock_series:
-            prediction_file = pd.read_csv(
-                name_folder_experiment + "/" + name_folder_result_experiment + "/" + s + "/" + configuration + "/stats/predictions.csv",
+            errors_file = pd.read_csv(
+                name_folder_experiment + "/" + name_folder_result_experiment + "/" + s + "/" + configuration + "/stats/errors.csv",
                 index_col=0, sep=',')
             model_report['stock_names'].append(s)
-            model_report['rmse_list_norm'].append(
-                get_RMSE(prediction_file['observed_norm'], prediction_file['predicted_norm']))
-            model_report['rmse_list_denorm'].append(
-                get_RMSE(prediction_file['observed_denorm'], prediction_file['predicted_denorm']))
+            model_report['rmse_list_norm'].append(errors_file["rmse_norm"])
+            model_report['rmse_list_denorm'].append(errors_file["rmse_denorm"])
         os.makedirs(
             name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + configuration + "/",
             exist_ok=True)
@@ -68,14 +66,12 @@ def report_stockseries(name_folder_experiment, name_folder_result_experiment, na
             # save name of configuration in dictionary
             single_series_report_dict['configuration'].append(c)
             # read 'predictions.csv' file
-            prediction_file = pd.read_csv(
-                name_folder_experiment + "/" + name_folder_result_experiment + "/" + s + "/" + c + "/stats/predictions.csv")
+            errors_file = pd.read_csv(
+                name_folder_experiment + "/" + name_folder_result_experiment + "/" + s + "/" + c + "/stats/errors.csv")
             # perform RMSE_norm and save in dictionary
-            single_series_report_dict['RMSE_normalized'].append(
-                get_RMSE(prediction_file['observed_norm'], prediction_file['predicted_norm']))
+            single_series_report_dict['RMSE_normalized'].append(errors_file["rmse_norm"])
             # perform RMSE_denorm and save in dictionary
-            single_series_report_dict['RMSE_denormalized'].append(
-                get_RMSE(prediction_file['observed_denorm'], prediction_file['predicted_denorm']))
+            single_series_report_dict['RMSE_denormalized'].append(errors_file["rmse_denorm"])
         # save as '.csv' the dictionary in STOCK_FOLDER_PATH
         pd.DataFrame(single_series_report_dict).to_csv(
             name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + s + "/" + name_files_output + ".csv")
