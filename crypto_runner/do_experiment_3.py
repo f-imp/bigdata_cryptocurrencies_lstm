@@ -49,91 +49,95 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
 
     os.mkdir(EXPERIMENT + "/" + RESULT_PATH)
 
-    for s in series:
-        stock_name = s.replace(".csv", "")
-        # for each stock
-        # create a folder for data
-        os.makedirs(TENSOR_DATA_PATH + "/" + stock_name, exist_ok=True)
-        # create a folder for results
-        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name)
-        data_compliant, features, features_without_date, scaler = experiments.prepare_input_forecasting(
-            DATA_PATH + "/" + s,
-            features_to_exclude_from_scaling)
-        target_indexes_without_date = [features_without_date.index(f) for f in features_without_date if
-                                       f.startswith('Close')]
-        for temporal, neurons in product(temporal_sequence, number_neurons):
-            print(s, "\t", temporal, "\t", neurons)
-            dataset_tensor = experiments.fromtemporal_totensor(np.array(data_compliant), temporal,
-                                                               TENSOR_DATA_PATH + "/" + stock_name + "/",
-                                                               stock_name)
-            # Dict for statistics
-            predictions_file = {'symbol': [], 'date': [], 'observed_norm': [], 'predicted_norm': [],
-                                'observed_denorm': [],
-                                'predicted_denorm': []}
-            errors_file = {'symbol': [], 'date': [], 'rmse_norm': [], 'rmse_denorm': []}
-            # define a name for this configuration (following folder)
-            configuration_name = "LSTM_" + str(neurons) + "_neurons_" + str(temporal) + "_days"
-            # Create a folder to save
-            # - best model checkpoint
-            best_model = "model"
-            # - statistics (results)
-            statistics = "stats"
-            os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name)
-            os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model)
-            os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics)
-            for data_tester in testing_set:
-                train, test = experiments.train_test_split_w_date(features, dataset_tensor, data_tester)
-                train = train[:, :, 1:]
-                test = test[:, :, 1:]
+    if "Indicators" in EXPERIMENT:
+        s = "horizontal_indicators.csv"
+    else:
+        s = "horizontal.csv"
 
-                x_train, y_train = train[:, :-1, :], train[:, -1, target_indexes_without_date]
-                x_test, y_test = test[:, :-1, :], test[:, -1, target_indexes_without_date]
+    stock_name = s.replace(".csv", "")
 
-                # Fare il training
-                if data_tester == testing_set[0]:
-                    model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
-                                                             dropout=0.2,
-                                                             epochs=100,
-                                                             batch_size=256,
-                                                             dimension_last_layer=10,
-                                                             model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
-                else:
-                    model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
-                                                             dropout=0.2,
-                                                             epochs=100,
-                                                             batch_size=256, dimension_last_layer=10, model=model,
-                                                             model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
+    # create a folder for data
+    os.makedirs(TENSOR_DATA_PATH + "/" + stock_name, exist_ok=True)
+    # create a folder for results
+    os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name)
+    data_compliant, features, features_without_date, scaler = experiments.prepare_input_forecasting(
+        DATA_PATH + "/" + s,
+        features_to_exclude_from_scaling)
+    target_indexes_without_date = [features_without_date.index(f) for f in features_without_date if
+                                   f.startswith('Close')]
+    for temporal, neurons in product(temporal_sequence, number_neurons):
+        print(s, "\t", temporal, "\t", neurons)
+        dataset_tensor = experiments.fromtemporal_totensor(np.array(data_compliant), temporal,
+                                                           TENSOR_DATA_PATH + "/" + stock_name + "/",
+                                                           stock_name)
+        # Dict for statistics
+        predictions_file = {'symbol': [], 'date': [], 'observed_norm': [], 'predicted_norm': [],
+                            'observed_denorm': [],
+                            'predicted_denorm': []}
+        errors_file = {'symbol': [], 'date': [], 'rmse_norm': [], 'rmse_denorm': []}
+        # define a name for this configuration (following folder)
+        configuration_name = "LSTM_" + str(neurons) + "_neurons_" + str(temporal) + "_days"
+        # Create a folder to save
+        # - best model checkpoint
+        best_model = "model"
+        # - statistics (results)
+        statistics = "stats"
+        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name)
+        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model)
+        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics)
+        for data_tester in testing_set:
+            train, test = experiments.train_test_split_w_date(features, dataset_tensor, data_tester)
+            train = train[:, :, 1:]
+            test = test[:, :, 1:]
 
-                # Tiriamo fuori la predizione per ogni esempio di test
-                test_prediction = model.predict(x_test)
-                rmse = experiments.get_RMSE(y_test, test_prediction)
-                y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, 10))
+            x_train, y_train = train[:, :-1, :], train[:, -1, target_indexes_without_date]
+            x_test, y_test = test[:, :-1, :], test[:, -1, target_indexes_without_date]
 
-                test_prediction_denorm = scaler.inverse_transform(test_prediction)
-                rmse_denorm = experiments.get_RMSE(y_test_denorm, test_prediction_denorm)
-                '''
-                y_test = float(y_test)
-                test_prediction = float(test_prediction)
-                y_test_denorm = float(y_test_denorm)
-                test_prediction_denorm = float(test_prediction_denorm)
-                '''
+            # Fare il training
+            if data_tester == testing_set[0]:
+                model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
+                                                         dropout=0.2,
+                                                         epochs=100,
+                                                         batch_size=256,
+                                                         dimension_last_layer=10,
+                                                         model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
+            else:
+                model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
+                                                         dropout=0.2,
+                                                         epochs=100,
+                                                         batch_size=256, dimension_last_layer=10, model=model,
+                                                         model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
 
-                # Salvo i risultati nei dizionari
-                predictions_file['symbol'].append(stock_name)
-                predictions_file['date'].append(data_tester)
-                predictions_file['observed_norm'].append(y_test)
-                predictions_file['predicted_norm'].append(test_prediction)
-                predictions_file['observed_denorm'].append(y_test_denorm)
-                predictions_file['predicted_denorm'].append(test_prediction_denorm)
+            # Tiriamo fuori la predizione per ogni esempio di test
+            test_prediction = model.predict(x_test)
+            rmse = experiments.get_RMSE(y_test, test_prediction)
+            y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, 10))
 
-                errors_file['symbol'].append(stock_name)
-                errors_file['date'].append(data_tester)
-                errors_file['rmse_norm'].append(rmse)
-                errors_file['rmse_denorm'].append(rmse_denorm)
-            pd.DataFrame(data=predictions_file).to_csv(
-                EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
-            pd.DataFrame(data=errors_file).to_csv(
-                EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
+            test_prediction_denorm = scaler.inverse_transform(test_prediction)
+            rmse_denorm = experiments.get_RMSE(y_test_denorm, test_prediction_denorm)
+            '''
+            y_test = float(y_test)
+            test_prediction = float(test_prediction)
+            y_test_denorm = float(y_test_denorm)
+            test_prediction_denorm = float(test_prediction_denorm)
+            '''
+
+            # Salvo i risultati nei dizionari
+            predictions_file['symbol'].append(stock_name)
+            predictions_file['date'].append(data_tester)
+            predictions_file['observed_norm'].append(y_test)
+            predictions_file['predicted_norm'].append(test_prediction)
+            predictions_file['observed_denorm'].append(y_test_denorm)
+            predictions_file['predicted_denorm'].append(test_prediction_denorm)
+
+            errors_file['symbol'].append(stock_name)
+            errors_file['date'].append(data_tester)
+            errors_file['rmse_norm'].append(rmse)
+            errors_file['rmse_denorm'].append(rmse_denorm)
+        pd.DataFrame(data=predictions_file).to_csv(
+            EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
+        pd.DataFrame(data=errors_file).to_csv(
+            EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
     report_configurations_exp3(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                                name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")

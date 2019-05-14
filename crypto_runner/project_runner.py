@@ -1,10 +1,13 @@
 from crypto_runner.do_experiment_1 import single_target
 from crypto_runner.do_experiment_3 import multi_target
 from crypto_utility import test_set
+from crypto_runner import do_preprocessing
 
 import warnings
 
 warnings.filterwarnings("ignore")
+
+do_preprocessing.run()
 
 # -------- PARAMETERS ----------------------------------------------------------------------------
 temporal_sequence_considered = [30, 100, 200]
@@ -45,10 +48,10 @@ multi_target(EXPERIMENT=EXPERIMENT_THREE, DATA_PATH=DATA_PATH_THREE, TENSOR_DATA
              features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling, testing_set=TEST_SET)
 
 # ------------------------------------ EXPERIMENT FOUR (multi + indicators) ------------------------------------
-EXPERIMENT_FOUR = "../MultiTarget_Indicators"
-# TODO --- creare versione horizontal con indicators
-DATA_PATH_FOUR = "../crypto_preprocessing/step6_horizontal_indicators/"
+EXPERIMENT_FOUR = "../MultiTarget_Data_with_Indicators"
+DATA_PATH_FOUR = "../crypto_preprocessing/step5_horizontal/"
 print(EXPERIMENT_FOUR)
-# multi_target(EXPERIMENT=EXPERIMENT_FOUR, DATA_PATH=DATA_PATH_FOUR, temporal_sequence=temporal_sequence_considered,
-#              number_neurons=number_neurons_LSTM,
-#              features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling, testing_set=TEST_SET)
+multi_target(EXPERIMENT=EXPERIMENT_FOUR, DATA_PATH=DATA_PATH_FOUR, TENSOR_DATA_PATH=TENSOR_PATH,
+             temporal_sequence=temporal_sequence_considered,
+              number_neurons=number_neurons_LSTM,
+              features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling, testing_set=TEST_SET)

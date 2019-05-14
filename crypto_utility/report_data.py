@@ -136,7 +136,11 @@ def report_configurations_exp3(name_folder_experiment, name_folder_result_experi
                                name_files_output):
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
 
-    name_folder_result_experiment += "/horizontal"
+    if "Indicators" in name_folder_experiment:
+        name_folder_result_experiment += "/horizontal_indicators"
+    else:
+        name_folder_result_experiment += "/horizontal"
+
     confs = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/")
     confs.sort(reverse=True)
     dizionario_report_totale = {"configuration": [], "Average_RMSE_norm": [], "Average_RMSE_denorm": []}
