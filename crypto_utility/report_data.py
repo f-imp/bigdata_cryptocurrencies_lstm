@@ -69,9 +69,10 @@ def report_stockseries_exp1(name_folder_experiment, name_folder_result_experimen
             errors_file = pd.read_csv(
                 name_folder_experiment + "/" + name_folder_result_experiment + "/" + s + "/" + c + "/stats/errors.csv")
             # perform RMSE_norm and save in dictionary
-            single_series_report_dict['RMSE_normalized'].append(errors_file["rmse_norm"])
+            single_series_report_dict['RMSE_normalized'].append(float(errors_file["rmse_norm"]))
+            # print(float(errors_file['rmse_norm']))
             # perform RMSE_denorm and save in dictionary
-            single_series_report_dict['RMSE_denormalized'].append(errors_file["rmse_denorm"])
+            single_series_report_dict['RMSE_denormalized'].append(float(errors_file["rmse_denorm"]))
         # save as '.csv' the dictionary in STOCK_FOLDER_PATH
         pd.DataFrame(single_series_report_dict).to_csv(
             name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + s + "/" + name_files_output + ".csv")

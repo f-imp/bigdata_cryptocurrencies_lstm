@@ -11,9 +11,9 @@ def prepare_input_forecasting(path_series, features_to_exclude):
     data = pd.read_csv(path_series, sep=',')
     data['DateTime'] = pd.to_datetime(data['DateTime'])
     features = data.columns
-    print(features)
+    #print(features)
     features = [f for f in features if f not in features_to_exclude]
-    print(features)
+    #print(features)
     features_without_date = [f for f in features if f != 'DateTime']
     dataset = data[features]
     scaler = MinMaxScaler()
@@ -91,7 +91,7 @@ def train_model(x_train, y_train, x_test, y_test, lstm_neurons, dropout, epochs,
         model.compile(loss='mean_squared_error', optimizer='adam', metrics=['acc', 'mae'])
 
     history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test),
-                            verbose=2, shuffle=False, callbacks=callbacks)
+                            verbose=0, shuffle=False, callbacks=callbacks)
     return model, history
 
 

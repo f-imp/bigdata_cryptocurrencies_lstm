@@ -46,7 +46,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
             # stock_name = s.replace("_normalized.csv", "")
             stock_name = s.replace("_with_indicators.csv", "")
         else:
-            stock_name = s.replace(".csv","")
+            stock_name = s.replace(".csv", "")
         # for each stock
         # create a folder for data
         os.makedirs(TENSOR_DATA_PATH + "/" + stock_name, exist_ok=True)
@@ -56,6 +56,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
             DATA_PATH + "/" + s,
             features_to_exclude_from_scaling)
         for temporal, neurons in product(temporal_sequence, number_neurons):
+            print(s, "\t", temporal, "\t", neurons)
             dataset_tensor = experiments.fromtemporal_totensor(np.array(data_compliant), temporal,
                                                                TENSOR_DATA_PATH + "/" + stock_name + "/",
                                                                stock_name)

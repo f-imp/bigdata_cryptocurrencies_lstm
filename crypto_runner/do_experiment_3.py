@@ -62,6 +62,7 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
         target_indexes_without_date = [features_without_date.index(f) for f in features_without_date if
                                        f.startswith('Close')]
         for temporal, neurons in product(temporal_sequence, number_neurons):
+            print(s, "\t", temporal, "\t", neurons)
             dataset_tensor = experiments.fromtemporal_totensor(np.array(data_compliant), temporal,
                                                                TENSOR_DATA_PATH + "/" + stock_name + "/",
                                                                stock_name)
