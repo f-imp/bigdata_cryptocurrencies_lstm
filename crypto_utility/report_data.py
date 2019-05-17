@@ -8,7 +8,7 @@ from crypto_utility.experiments import get_RMSE
 
 
 def report_configurations_exp1(temporal_sequence_used, neurons_used, name_folder_experiment,
-                          name_folder_result_experiment, name_folder_report, name_output_files):
+                               name_folder_result_experiment, name_folder_report, name_output_files):
     kind_of_report = "configurations_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)
@@ -46,10 +46,12 @@ def report_configurations_exp1(temporal_sequence_used, neurons_used, name_folder
         x_data="model", column_of_data="mean_rmse_norm", label_for_values_column="RMSE (Average)",
         label_x="Configurations", title_img="Average RMSE - Configurations Oriented",
         destination=name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/",
-        name_file_output="bargraph_RMSE_configurations_oriented")
+        name_file_output="singletarget_bargraph_RMSE_configurations_oriented")
+    return
 
 
-def report_stockseries_exp1(name_folder_experiment, name_folder_result_experiment, name_folder_report, name_files_output):
+def report_stockseries_exp1(name_folder_experiment, name_folder_result_experiment, name_folder_report,
+                            name_files_output):
     kind_of_report = "stockseries_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)
@@ -61,6 +63,7 @@ def report_stockseries_exp1(name_folder_experiment, name_folder_result_experimen
         os.makedirs(STOCK_FOLDER_PATH, exist_ok=True)
         single_series_report_dict = {'configuration': [], 'RMSE_normalized': [], 'RMSE_denormalized': []}
         configuration_used = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/" + s + "/")
+        configuration_used.sort(reverse=True)
         # for each configuration:
         for c in configuration_used:
             # save name of configuration in dictionary
@@ -81,7 +84,8 @@ def report_stockseries_exp1(name_folder_experiment, name_folder_result_experimen
             x_data="configuration", column_of_data="RMSE_normalized", label_for_values_column="RMSE (Average)",
             label_x="Configurations", title_img="Average RMSE - " + str(s),
             destination=name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + s + "/",
-            name_file_output="bargraph_RMSE_" + str(s))
+            name_file_output="singletarget_bargraph_RMSE_" + str(s))
+    return
 
 
 # Da sistemare ----- WORK IN PROGRESS -------
@@ -101,6 +105,7 @@ def plot_report(path_file, x_data, column_of_data, label_for_values_column, labe
     plt.title(title_img)
     f.savefig(destination + name_file_output, bbox_inches='tight', pad_inches=0)
     # plt.show()
+    return
 
 
 def report_configurations_exp2(name_folder_experiment, name_folder_result_experiment, name_folder_report,
@@ -130,16 +135,19 @@ def report_configurations_exp2(name_folder_experiment, name_folder_result_experi
             label_x="Configurations", title_img="Average RMSE - Configurations Oriented",
             destination=name_folder_experiment + "/" + name_folder_report + "/" + v + "/",
             name_file_output="bargraph_RMSE_configurations_oriented")
+    return
 
 
 def report_configurations_exp3(name_folder_experiment, name_folder_result_experiment, name_folder_report,
                                name_files_output):
+    kind_of_report = "configurations_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
+    os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)
 
-    if "Indicators" in name_folder_experiment:
-        name_folder_result_experiment += "/horizontal_indicators"
-    else:
-        name_folder_result_experiment += "/horizontal"
+    # if "Indicators" in name_folder_experiment:
+    #     name_folder_result_experiment += "/horizontal_indicators"
+    # else:
+    #     name_folder_result_experiment += "/horizontal"
 
     confs = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/")
     confs.sort(reverse=True)
@@ -150,11 +158,50 @@ def report_configurations_exp3(name_folder_experiment, name_folder_result_experi
         dizionario_report_totale["configuration"].append(c)
         dizionario_report_totale["Average_RMSE_norm"].append(float(errors_data["rmse_norm"]))
         dizionario_report_totale["Average_RMSE_denorm"].append(float(errors_data["rmse_denorm"]))
+
     pd.DataFrame(dizionario_report_totale).to_csv(
-        name_folder_experiment + "/" + name_folder_report + "/" + name_files_output + ".csv")
+        name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + name_files_output + ".csv")
     plot_report(
-        path_file=name_folder_experiment + "/" + name_folder_report + "/" + name_files_output + ".csv",
+        path_file=name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + name_files_output + ".csv",
         x_data="configuration", column_of_data="Average_RMSE_norm", label_for_values_column="RMSE (Average)",
         label_x="Configurations", title_img="Average RMSE - Configurations Oriented",
-        destination=name_folder_experiment + "/" + name_folder_report + "/",
-        name_file_output="bargraph_RMSE_configurations_oriented")
+        destination=name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/",
+        name_file_output="multitarget_bargraph_RMSE_configurations_oriented")
+    return
+
+
+def report_stockseries_exp3(names_series, name_folder_experiment, name_folder_result_experiment,
+                            name_folder_report, name_files_output):
+    kind_of_report = "stockseries_oriented"
+    os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
+    os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)
+
+    for n in names_series:
+        os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + n, exist_ok=True)
+        dizionario_report_totale = {"configuration": [], "RMSE_normalized": [], "RMSE_denormalized": []}
+        confs = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/")
+        print(name_folder_experiment + "/" + name_folder_result_experiment + "/")
+        confs.sort(reverse=True)
+        for c in confs:
+            dizionario_report_totale["configuration"].append(c)
+            predictions_file = pd.read_csv(
+                name_folder_experiment + "/" + name_folder_result_experiment + "/" + c + "/stats/predictions.csv",
+                sep=',')
+            # calcolare Average_RMSE_norm per la criptovaluta di nome n
+            # print(float(predictions_file[n + "_observed_norm"]), "\t", type(predictions_file[n + "_observed_norm"]))
+            RMSE_norm = get_RMSE(np.array(predictions_file[n + "_observed_norm"]),
+                                 np.array(predictions_file[n + "_predicted_norm"]))
+            # calcolare Average_RMSE_denorm per la criptovaluta di nome n
+            RMSE_denorm = get_RMSE(np.array(predictions_file[n + "_observed_denorm"]),
+                                   np.array(predictions_file[n + "_predicted_denorm"]))
+            dizionario_report_totale["RMSE_normalized"].append(float(RMSE_norm))
+            dizionario_report_totale["RMSE_denormalized"].append(float(RMSE_denorm))
+        pd.DataFrame(dizionario_report_totale).to_csv(
+            name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + n + "/" + name_files_output + ".csv")
+        plot_report(
+            path_file=name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + n + "/" + name_files_output + ".csv",
+            x_data="configuration", column_of_data="RMSE_normalized", label_for_values_column="RMSE",
+            label_x="Configurations", title_img="MultiTarget: RMSE - " + str(n),
+            destination=name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + n + "/",
+            name_file_output="multitarget_bargraph_RMSE_" + str(n))
+    return

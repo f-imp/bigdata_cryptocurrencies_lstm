@@ -16,7 +16,7 @@ from keras.models import load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from itertools import product
 from crypto_utility import test_set, experiments
-from crypto_utility.report_data import report_configurations_exp3
+from crypto_utility.report_data import report_configurations_exp3, report_stockseries_exp3
 
 np.random.seed(0)
 
@@ -43,7 +43,7 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
     REPORT_FOLDER_NAME = "Report"
 
     # Create Structure of Folder - according to defined path
-    os.mkdir(EXPERIMENT)
+    os.makedirs(EXPERIMENT, exist_ok=True)
 
     os.makedirs(TENSOR_DATA_PATH, exist_ok=True)
 
@@ -59,21 +59,33 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
     # create a folder for data
     os.makedirs(TENSOR_DATA_PATH + "/" + stock_name, exist_ok=True)
     # create a folder for results
-    os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name)
+    #os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/")
     data_compliant, features, features_without_date, scaler = experiments.prepare_input_forecasting(
         DATA_PATH + "/" + s,
         features_to_exclude_from_scaling)
     target_indexes_without_date = [features_without_date.index(f) for f in features_without_date if
                                    f.startswith('Close')]
+    # TODO --
+    # devo leggere i simboli dal dataset per creare le colonne (per ogni criptovaluta) nel file '.csv' predictions
+    # una funzione quindi che ritorni una lista con i nomi di ogni valuta, letti dal dataset di partenza
+    # name_cryptostock = experiments.getNames(path_data= , features_to_exclude_from_scaling)
+    names_crypto = experiments.getNames(DATA_PATH + s, features_to_exclude_from_scaling)
+
     for temporal, neurons in product(temporal_sequence, number_neurons):
         print(s, "\t", temporal, "\t", neurons)
         dataset_tensor = experiments.fromtemporal_totensor(np.array(data_compliant), temporal,
                                                            TENSOR_DATA_PATH + "/" + stock_name + "/",
                                                            stock_name)
+
         # Dict for statistics
-        predictions_file = {'symbol': [], 'date': [], 'observed_norm': [], 'predicted_norm': [],
-                            'observed_denorm': [],
-                            'predicted_denorm': []}
+        predictions_file = {'symbol': [], 'date': []}
+
+        for n in names_crypto:
+            predictions_file[n + "_observed_norm"] = []
+            predictions_file[n + "_predicted_norm"] = []
+            predictions_file[n + "_observed_denorm"] = []
+            predictions_file[n + "_predicted_denorm"] = []
+
         errors_file = {'symbol': [], 'date': [], 'rmse_norm': [], 'rmse_denorm': []}
         # define a name for this configuration (following folder)
         configuration_name = "LSTM_" + str(neurons) + "_neurons_" + str(temporal) + "_days"
@@ -82,9 +94,9 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
         best_model = "model"
         # - statistics (results)
         statistics = "stats"
-        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name)
-        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model)
-        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics)
+        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + configuration_name)
+        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + configuration_name + "/" + best_model)
+        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + statistics)
         for data_tester in testing_set:
             train, test = experiments.train_test_split_w_date(features, dataset_tensor, data_tester)
             train = train[:, :, 1:]
@@ -100,13 +112,13 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
                                                          epochs=100,
                                                          batch_size=256,
                                                          dimension_last_layer=10,
-                                                         model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
+                                                         model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + best_model + "/")
             else:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          dropout=0.2,
                                                          epochs=100,
                                                          batch_size=256, dimension_last_layer=10, model=model,
-                                                         model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
+                                                         model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + best_model + "/")
 
             # Tiriamo fuori la predizione per ogni esempio di test
             test_prediction = model.predict(x_test)
@@ -125,23 +137,37 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
             # Salvo i risultati nei dizionari
             predictions_file['symbol'].append(stock_name)
             predictions_file['date'].append(data_tester)
-            predictions_file['observed_norm'].append(y_test)
-            predictions_file['predicted_norm'].append(test_prediction)
-            predictions_file['observed_denorm'].append(y_test_denorm)
-            predictions_file['predicted_denorm'].append(test_prediction_denorm)
+
+            # TODO - DEBUGGING
+            # print(y_test[0],"\n",test_prediction[0],"\n",y_test_denorm[0],"\n",test_prediction_denorm[0])
+
+            for n, v in zip(names_crypto, y_test[0]):
+                predictions_file[n + "_observed_norm"].append(float(v))
+
+            for n, v in zip(names_crypto, test_prediction[0]):
+                predictions_file[n + "_predicted_norm"].append(float(v))
+
+            for n, v in zip(names_crypto, y_test_denorm[0]):
+                predictions_file[n + "_observed_denorm"].append(float(v))
+
+            for n, v in zip(names_crypto, test_prediction_denorm[0]):
+                predictions_file[n + "_predicted_denorm"].append(float(v))
 
             errors_file['symbol'].append(stock_name)
             errors_file['date'].append(data_tester)
             errors_file['rmse_norm'].append(rmse)
             errors_file['rmse_denorm'].append(rmse_denorm)
         pd.DataFrame(data=predictions_file).to_csv(
-            EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
+            EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
         pd.DataFrame(data=errors_file).to_csv(
-            EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
+            EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
     report_configurations_exp3(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                                name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
 
+    report_stockseries_exp3(names_series=names_crypto, name_folder_experiment=EXPERIMENT,
+                            name_folder_result_experiment=RESULT_PATH,
+                            name_folder_report=REPORT_FOLDER_NAME, name_files_output="report")
     return
 
 

@@ -97,3 +97,14 @@ def train_model(x_train, y_train, x_test, y_test, lstm_neurons, dropout, epochs,
 
 def get_RMSE(y, prediction):
     return np.math.sqrt(mean_squared_error(y, prediction))
+
+# TODO - hard constraint
+def getNames(path_data, name_columns):
+    dataset = pd.read_csv(path_data, sep=',')
+    names = []
+    for n in name_columns:
+        if str(dataset[n][0])== "USD":
+            names.append("BTC")
+        else:
+            names.append(dataset[n][0])
+    return names
