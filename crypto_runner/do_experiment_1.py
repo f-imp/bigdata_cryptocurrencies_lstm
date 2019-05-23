@@ -42,11 +42,11 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
     os.mkdir(EXPERIMENT + "/" + RESULT_PATH)
 
     for s in series:
-        if DATA_PATH == "../crypto_preprocessing/step1_indicators/":
+        #if DATA_PATH == "../crypto_preprocessing/step1_indicators/":
             # stock_name = s.replace("_normalized.csv", "")
-            stock_name = s.replace("_with_indicators.csv", "")
-        else:
-            stock_name = s.replace(".csv", "")
+        #    stock_name = s.replace("_with_indicators.csv", "")
+        #else:
+        stock_name = s.replace(".csv", "")
         # for each stock
         # create a folder for data
         os.makedirs(TENSOR_DATA_PATH + "/" + stock_name, exist_ok=True)
@@ -127,6 +127,8 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
             pd.DataFrame(data=errors_file).to_csv(
                 EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
+
+    '''
     report_configurations_exp1(temporal_sequence_used=temporal_sequence, neurons_used=number_neurons,
                                name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                                name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
@@ -134,5 +136,5 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
     report_stockseries_exp1(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                             name_folder_report=REPORT_FOLDER_NAME,
                             name_files_output="report")
-
+    '''
     return

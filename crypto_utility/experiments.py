@@ -29,6 +29,7 @@ def fromtemporal_totensor(dataset, window_considered, output_path, output_name):
     try:
         z = np.load(output_path + "/crypto_TensorFormat_" + output_name + "_" + str(window_considered) + '.npy')
         print('Versione supervisionata trovata!')
+
         return z
     except FileNotFoundError as e:
         print('Versione supervisionata del dataset non trovata, creazione in corso...')
