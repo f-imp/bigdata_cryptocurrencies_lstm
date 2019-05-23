@@ -11,15 +11,15 @@ def prepare_input_forecasting(path_series, features_to_exclude):
     data = pd.read_csv(path_series, sep=',')
     data['DateTime'] = pd.to_datetime(data['DateTime'])
     features = data.columns
-    #print(features)
+    # print(features)
     features = [f for f in features if f not in features_to_exclude]
-    #print(features)
+    # print(features)
     features_without_date = [f for f in features if f != 'DateTime']
     dataset = data[features]
     scaler = MinMaxScaler()
     scaler_target_feature = MinMaxScaler()
     scaler.fit(dataset.loc[:, dataset.columns != 'DateTime'])
-    #scaler_target_feature.fit(dataset.values[:, features.index('Close')].reshape(-1, 1))
+    # scaler_target_feature.fit(dataset.values[:, features.index('Close')].reshape(-1, 1))
     scaler_target_feature.fit(dataset.loc[:, [col for col in dataset.columns if col.startswith('Close')]])
     dataset.loc[:, dataset.columns != 'DateTime'] = scaler.transform(dataset.loc[:, dataset.columns != 'DateTime'])
     return dataset, features, features_without_date, scaler_target_feature
@@ -29,7 +29,7 @@ def fromtemporal_totensor(dataset, window_considered, output_path, output_name):
     try:
         z = np.load(output_path + "/crypto_TensorFormat_" + output_name + "_" + str(window_considered) + '.npy')
         print('Versione supervisionata trovata!')
-
+        # print("\n--- LETTO PRE-ESISTENTE\n", z, "\n---\n")
         return z
     except FileNotFoundError as e:
         print('Versione supervisionata del dataset non trovata, creazione in corso...')
@@ -48,8 +48,10 @@ def fromtemporal_totensor(dataset, window_considered, output_path, output_name):
                           axis=0)
         output_path += "/crypto_"
         name_tensor = 'TensorFormat_' + output_name + '_' + str(window_considered)
-        np.save(str(output_path + name_tensor), z)
-        return z[1:, :]
+        np.save(str(output_path + name_tensor), z[1:,:])
+        # print("\n--- CREATO\n", z, "\n---\n")
+        # print("\n--- LETTO\n", z[1:, :], "\n---\n")
+        return z
 
 
 def train_test_split_w_date(features, dataset_tensor_version, single_date):
@@ -92,7 +94,7 @@ def train_model(x_train, y_train, x_test, y_test, lstm_neurons, dropout, epochs,
         model.compile(loss='mean_squared_error', optimizer='adam', metrics=['acc', 'mae'])
 
     history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test),
-                            verbose=0, shuffle=False, callbacks=callbacks)
+                        verbose=0, shuffle=False, callbacks=callbacks)
     return model, history
 
 
@@ -104,7 +106,7 @@ def getNames(path_data, name_columns):
     dataset = pd.read_csv(path_data, sep=',')
     names = []
     for n in name_columns:
-        if str(dataset[n][0])== "USD":
+        if str(dataset[n][0]) == "USD":
             names.append("BTC")
         else:
             names.append(dataset[n][0])
