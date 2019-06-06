@@ -32,7 +32,7 @@ def fromtemporal_totensor(dataset, window_considered, output_path, output_name):
         # print("\n--- LETTO PRE-ESISTENTE\n", z, "\n---\n")
         return z
     except FileNotFoundError as e:
-        print('Versione supervisionata del dataset non trovata, creazione in corso...')
+        print('Versione supervisionata dei dati non trovata, creazione in corso...')
         # 1 array
         # con "window_considered" righe
         # "dataset.shape[1]" colonne
@@ -40,7 +40,6 @@ def fromtemporal_totensor(dataset, window_considered, output_path, output_name):
         # per i che varia
         # da 0 fino
         # al (totale - finestra + 1)        ]
-        print("Ci metto parecchio dovrai aspettare")
         for i in range(dataset.shape[0] - window_considered + 1):
             if i%int((dataset.shape[0] - window_considered + 1)/10)==0: print(str(int((i/(dataset.shape[0] - window_considered + 1))*100)) + "%")
             # aggiungo ad una copia di (z)

@@ -141,7 +141,7 @@ def run():
 
     folder_step_four = "step4_cutdata"
 
-    first_day ="2016-07-23"
+    first_day ="2015-03-30"
 
     steps=["","_indicators"]
 

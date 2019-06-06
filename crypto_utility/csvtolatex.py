@@ -10,8 +10,6 @@ table1="""\\begin{{frame}}{{Results - Stock Oriented}}
          BTC & {} & {} & {} & {} & {} & {}\\\\
          DASH & {} & {} & {} & {} & {} & {}\\\\
          DOGE & {} & {} & {} & {} & {} & {}\\\\
-         ETC & {} & {} & {} & {} & {} & {}\\\\
-         ETH & {} & {} & {} & {} & {} & {}\\\\
          LTC & {} & {} & {} & {} & {} & {}\\\\
          XEM & {} & {} & {} & {} & {} & {}\\\\
          XLM & {} & {} & {} & {} & {} & {}\\\\
@@ -32,8 +30,6 @@ table2="""\\begin{{frame}}{{Results - Configuration Oriented}}
          BTC & {} & {} & {} & {}\\\\
          DASH & {} & {} & {} & {}\\\\
          DOGE & {} & {} & {} & {}\\\\
-         ETC & {} & {} & {} & {}\\\\
-         ETH & {} & {} & {} & {}\\\\
          LTC & {} & {} & {} & {}\\\\
          XEM & {} & {} & {} & {}\\\\
          XLM & {} & {} & {} & {}\\\\
@@ -148,7 +144,7 @@ config_index=-1
 neuroni=[128,256]
 days=[30,100,200]
 
-COINS=["BTC","DASH","DOGE","ETC","ETH","LTC","XEM","XLM","XMR","XRP"]
+COINS=["BTC","DASH","DOGE","LTC","XEM","XLM","XMR","XRP"]
 
 data=[]
 

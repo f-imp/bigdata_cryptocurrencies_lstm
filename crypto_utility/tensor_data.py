@@ -2,7 +2,7 @@ import os
 import numpy as np
 from crypto_utility import experiments
 
-def generate(DATA_PATHS, TENSOR_PATH, temporal_sequence_considered):
+def generate(DATA_PATHS, TENSOR_PATH, temporal_sequence_considered, SingleFeaturesToExclude, MultiFeaturesToExclude):
     for path in DATA_PATHS:
         series = os.listdir(path)
         for s in series:
@@ -10,10 +10,9 @@ def generate(DATA_PATHS, TENSOR_PATH, temporal_sequence_considered):
             os.makedirs(TENSOR_PATH + "/" + stock_name, exist_ok=True)
 
             if "horizontal" not in path:
-                features_to_exclude_from_scaling = ['Symbol']
+                features_to_exclude_from_scaling = SingleFeaturesToExclude
             else:
-                features_to_exclude_from_scaling = ['Symbol_1', 'Symbol_2', 'Symbol_3', 'Symbol_4', 'Symbol_5', 'Symbol_6',
-                                              'Symbol_7', 'Symbol_8', 'Symbol_9', 'Symbol_10']
+                features_to_exclude_from_scaling = MultiFeaturesToExclude
 
             data_compliant, features, features_without_date, scaler = experiments.prepare_input_forecasting(
                     path + "/" + s,

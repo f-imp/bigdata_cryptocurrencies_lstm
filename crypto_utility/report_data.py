@@ -72,6 +72,7 @@ def report_stockseries_exp1(name_folder_experiment, name_folder_result_experimen
             errors_file = pd.read_csv(
                 name_folder_experiment + "/" + name_folder_result_experiment + "/" + s + "/" + c + "/stats/errors.csv")
             # perform RMSE_norm and save in dictionary
+            #TODO: ERRORE CANNOT CONVERT CLASS TO FLOAT perchè è un array non un singolo valore, manca la media di regola
             single_series_report_dict['RMSE_normalized'].append(float(errors_file["rmse_norm"]))
             # print(float(errors_file['rmse_norm']))
             # perform RMSE_denorm and save in dictionary

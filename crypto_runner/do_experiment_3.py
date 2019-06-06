@@ -111,19 +111,19 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
                                                          dropout=0.2,
                                                          epochs=100,
                                                          batch_size=256,
-                                                         dimension_last_layer=10,
+                                                         dimension_last_layer=8,
                                                          model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + best_model + "/")
             else:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          dropout=0.2,
                                                          epochs=100,
-                                                         batch_size=256, dimension_last_layer=10, model=model,
+                                                         batch_size=256, dimension_last_layer=8, model=model,
                                                          model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + best_model + "/")
 
             # Tiriamo fuori la predizione per ogni esempio di test
             test_prediction = model.predict(x_test)
             rmse = experiments.get_RMSE(y_test, test_prediction)
-            y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, 10))
+            y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, 8))
 
             test_prediction_denorm = scaler.inverse_transform(test_prediction)
             rmse_denorm = experiments.get_RMSE(y_test_denorm, test_prediction_denorm)

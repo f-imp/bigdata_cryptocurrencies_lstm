@@ -1,10 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
-/crypto_TensorData/*
 
+/crypto_TensorData/*
 .npy
 .ipynb
 .idea/workspace.xml
 crypto_utility/__pycache__/
 utility/__pycache__/
 .idea/*
-baseline/*
