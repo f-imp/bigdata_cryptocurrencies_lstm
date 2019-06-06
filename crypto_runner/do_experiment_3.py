@@ -162,12 +162,12 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
         pd.DataFrame(data=errors_file).to_csv(
             EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
-    report_configurations_exp3(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
-                               name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
-
-    report_stockseries_exp3(names_series=names_crypto, name_folder_experiment=EXPERIMENT,
-                            name_folder_result_experiment=RESULT_PATH,
-                            name_folder_report=REPORT_FOLDER_NAME, name_files_output="report")
+    # report_configurations_exp3(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+    #                            name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
+    #
+    # report_stockseries_exp3(names_series=names_crypto, name_folder_experiment=EXPERIMENT,
+    #                         name_folder_result_experiment=RESULT_PATH,
+    #                         name_folder_report=REPORT_FOLDER_NAME, name_files_output="report")
     return
 
 

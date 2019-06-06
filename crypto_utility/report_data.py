@@ -4,11 +4,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+from crypto_utility import experiments
 from crypto_utility.experiments import get_RMSE
 
 
-def report_configurations_exp1(temporal_sequence_used, neurons_used, name_folder_experiment,
-                               name_folder_result_experiment, name_folder_report, name_output_files):
+def report_configurations_SingleTarget(temporal_sequence_used, neurons_used, name_folder_experiment,
+                                       name_folder_result_experiment, name_folder_report, name_output_files):
     kind_of_report = "configurations_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)
@@ -50,8 +51,8 @@ def report_configurations_exp1(temporal_sequence_used, neurons_used, name_folder
     return
 
 
-def report_stockseries_exp1(name_folder_experiment, name_folder_result_experiment, name_folder_report,
-                            name_files_output):
+def report_stockseries_SingleTarget(name_folder_experiment, name_folder_result_experiment, name_folder_report,
+                                    name_files_output):
     kind_of_report = "stockseries_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)
@@ -72,11 +73,12 @@ def report_stockseries_exp1(name_folder_experiment, name_folder_result_experimen
             errors_file = pd.read_csv(
                 name_folder_experiment + "/" + name_folder_result_experiment + "/" + s + "/" + c + "/stats/errors.csv")
             # perform RMSE_norm and save in dictionary
-            #TODO: ERRORE CANNOT CONVERT CLASS TO FLOAT perchè è un array non un singolo valore, manca la media di regola
-            single_series_report_dict['RMSE_normalized'].append(float(errors_file["rmse_norm"]))
+            avg_rmse_norm = errors_file["rmse_norm"].mean()
+            single_series_report_dict['RMSE_normalized'].append(float(avg_rmse_norm))
             # print(float(errors_file['rmse_norm']))
             # perform RMSE_denorm and save in dictionary
-            single_series_report_dict['RMSE_denormalized'].append(float(errors_file["rmse_denorm"]))
+            avg_rmse_denorm = errors_file["rmse_denorm"].mean()
+            single_series_report_dict['RMSE_denormalized'].append(float(avg_rmse_denorm))
         # save as '.csv' the dictionary in STOCK_FOLDER_PATH
         pd.DataFrame(single_series_report_dict).to_csv(
             name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + s + "/" + name_files_output + ".csv")
@@ -116,18 +118,20 @@ def report_configurations_exp2(name_folder_experiment, name_folder_result_experi
     versions_dataset = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/")
 
     for v in versions_dataset:
-        print(v)
+        # print(v)
         os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + v + "/", exist_ok=True)
         dizionario_report_totale = {"configuration": [], "Average_RMSE_norm": [], "Average_RMSE_denorm": []}
         confs = os.listdir(name_folder_experiment + "/" + name_folder_result_experiment + "/" + v)
         confs.sort(reverse=True)
         for c in confs:
-            print(c)
+            # print(c)
             errors_data = pd.read_csv(
                 name_folder_experiment + "/" + name_folder_result_experiment + "/" + v + "/" + c + "/stats/errors.csv")
             dizionario_report_totale["configuration"].append(c)
-            dizionario_report_totale["Average_RMSE_norm"].append(float(errors_data["rmse_norm"]))
-            dizionario_report_totale["Average_RMSE_denorm"].append(float(errors_data["rmse_denorm"]))
+            avg_rmse_norm = errors_data["rmse_norm"].mean()
+            dizionario_report_totale["Average_RMSE_norm"].append(float(avg_rmse_norm))
+            avg_rmse_denorm = errors_data["rmse_denorm"].mean()
+            dizionario_report_totale["Average_RMSE_denorm"].append(float(avg_rmse_denorm))
         pd.DataFrame(dizionario_report_totale).to_csv(
             name_folder_experiment + "/" + name_folder_report + "/" + v + "/" + name_files_output + ".csv")
         plot_report(
@@ -139,8 +143,8 @@ def report_configurations_exp2(name_folder_experiment, name_folder_result_experi
     return
 
 
-def report_configurations_exp3(name_folder_experiment, name_folder_result_experiment, name_folder_report,
-                               name_files_output):
+def report_configurations_MultiTarget(name_folder_experiment, name_folder_result_experiment, name_folder_report,
+                                      name_files_output):
     kind_of_report = "configurations_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)
@@ -157,8 +161,10 @@ def report_configurations_exp3(name_folder_experiment, name_folder_result_experi
         errors_data = pd.read_csv(
             name_folder_experiment + "/" + name_folder_result_experiment + "/" + c + "/stats/errors.csv")
         dizionario_report_totale["configuration"].append(c)
-        dizionario_report_totale["Average_RMSE_norm"].append(float(errors_data["rmse_norm"]))
-        dizionario_report_totale["Average_RMSE_denorm"].append(float(errors_data["rmse_denorm"]))
+        avg_rmse_norm = errors_data["rmse_norm"].mean()
+        dizionario_report_totale["Average_RMSE_norm"].append(float(avg_rmse_norm))
+        avg_rmse_denorm = errors_data["rmse_denorm"].mean()
+        dizionario_report_totale["Average_RMSE_denorm"].append(float(avg_rmse_denorm))
 
     pd.DataFrame(dizionario_report_totale).to_csv(
         name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + name_files_output + ".csv")
@@ -171,12 +177,18 @@ def report_configurations_exp3(name_folder_experiment, name_folder_result_experi
     return
 
 
-def report_stockseries_exp3(names_series, name_folder_experiment, name_folder_result_experiment,
-                            name_folder_report, name_files_output):
+def report_stockseries_MultiTarget(name_folder_experiment, name_folder_result_experiment,
+                                   name_folder_report, name_files_output, original_datapath,
+                                   features_to_exclude_from_scaling):
     kind_of_report = "stockseries_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/", exist_ok=True)
 
+    if "Indicators" in name_folder_experiment:
+        s = "horizontal_indicators.csv"
+    else:
+        s = "horizontal.csv"
+    names_series = experiments.getNames(original_datapath + s, features_to_exclude_from_scaling)
     for n in names_series:
         os.makedirs(name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + n, exist_ok=True)
         dizionario_report_totale = {"configuration": [], "RMSE_normalized": [], "RMSE_denormalized": []}
