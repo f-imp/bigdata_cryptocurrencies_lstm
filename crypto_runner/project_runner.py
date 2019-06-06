@@ -103,7 +103,7 @@ multi_target(EXPERIMENT=EXPERIMENT_THREE, DATA_PATH=DATA_PATH_THREE, TENSOR_DATA
              number_neurons=number_neurons_LSTM,
              features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling, testing_set=TEST_SET)
 
-'''
+
 
 #
 # # ------------------------------------ EXPERIMENT FOUR (multi + indicators) ------------------------------------
@@ -118,7 +118,7 @@ multi_target(EXPERIMENT=EXPERIMENT_FOUR, DATA_PATH=DATA_PATH_FOUR, TENSOR_DATA_P
              number_neurons=number_neurons_LSTM,
              features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling, testing_set=TEST_SET)
 
-
+'''
 '''
 #Utili in caso si voglia addestare le configurazioni a pezzi
 #Generazione report esterna per Experiment One
