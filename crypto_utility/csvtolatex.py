@@ -1,5 +1,5 @@
 table1="""\\begin{{frame}}{{Results - Stock Oriented}}
-\\begin{{block}}{{PH_TITLE}}
+\\begin{{block}}{{RMSE - PH_TITLE}}
 \\begin{{table}}[] 
   \\begin{{tabular}}{{c?c|c|c?c|c|c}}
      Neurons & \multicolumn{{3}}{{c?}}{{128}}
@@ -21,7 +21,7 @@ table1="""\\begin{{frame}}{{Results - Stock Oriented}}
 \end{{frame}}"""
 
 table2="""\\begin{{frame}}{{Results - Configuration Oriented}}
-\\begin{{block}}{{PH_TITLE}}
+\\begin{{block}}{{RMSE - PH_TITLE}}
 \\begin{{table}}[]
     \centering
     \\begin{{tabular}}{{c?c|c|c|c}}
@@ -42,7 +42,7 @@ table2="""\\begin{{frame}}{{Results - Configuration Oriented}}
 
 
 table3="""\\begin{{frame}}{{Results - Type Oriented}}
-\\begin{{block}}{{Errors}}
+\\begin{{block}}{{RMSE}}
 \\begin{{table}}[]
     \centering
     \\begin{{tabular}}{{c?c|c|c}}
@@ -58,8 +58,8 @@ table3="""\\begin{{frame}}{{Results - Type Oriented}}
 \end{{block}}
 \end{{frame}}"""
 
-table4="""\\begin{{frame}}{{Results - Type Oriented}}
-\\begin{{block}}{{Errors}}
+table4="""\\begin{{frame}}{{Results - Days Oriented}}
+\\begin{{block}}{{RMSE}}
 \\begin{{table}}[]
     \centering
     \\begin{{tabular}}{{c?c|c|c|c}}
@@ -153,7 +153,7 @@ from itertools import product
 debug=False
 
 for path in PATHS:
-    csv = "../baseline/" + path + "/Report/stockseries_oriented/"
+    csv = "../" + path + "/Report/stockseries_oriented/"
     for coin in COINS:
         for neur,dayz in product(neuroni,days):
             for filename in Path('').glob(csv+coin+'*/**/*.csv'):
@@ -194,7 +194,7 @@ for neur,dayz in product(neuroni,days):
     title.append("LSTM "+str(neur)+" neurons "+str(dayz)+" days")
     for coin in COINS:
         for path in PATHS:
-            csv = "../baseline/" + path + "/Report/stockseries_oriented/" + coin
+            csv = "../" + path + "/Report/stockseries_oriented/" + coin
             for filename in Path('').glob(csv +'*/**/*.csv'):
                 if debug: print(filename)
                 i = 0

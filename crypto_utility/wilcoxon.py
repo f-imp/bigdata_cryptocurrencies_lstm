@@ -1,4 +1,11 @@
 import scipy.stats as ss
+from decimal import Decimal
+
+def formatNumber(number):
+    if number<=0.0001:
+        return (f"{Decimal(number):.2e}")
+    else:
+        return (f"{Decimal(number):.4f}")
 
 PATHS=["SingleTarget_Data","SingleTarget_Data_with_Indicators","MultiTarget_Data","MultiTarget_Data_with_Indicators"]
 
@@ -12,7 +19,7 @@ config_index=-1
 neuroni=[128,256]
 days=[30,100,200]
 
-COINS=["BTC","DASH","DOGE","ETC","ETH","LTC","XEM","XLM","XMR","XRP"]
+COINS=["BTC","DASH","DOGE","LTC","XEM","XLM","XMR","XRP"]
 
 data=[]
 
@@ -24,7 +31,7 @@ data=[]
 
 
 for path in PATHS:
-    csv = "../baseline/" + path + "/Report/stockseries_oriented/"
+    csv = "../" + path + "/Report/stockseries_oriented/"
     data1=[]
     for coin in COINS:
         for neur,dayz in product(neuroni,days):
@@ -45,19 +52,20 @@ for path in PATHS:
 
     data.append(data1)
 
-print(len(data))
-print(data)
-
 dat=[]
+
 
 for i in range(0,len(data)):
     for y in range(i+1,len(data)):
         print(PATHS[i] + " - " + PATHS[y])
+        if debug: print(data[i])
+        if debug: print(data[y])
         w,p = ss.wilcoxon(data[i],data[y])
         print(w, p)
         dat.append(p)
 
-        '''w,p = ss.wilcoxon(data[i],data[y],correction=True)
+        '''
+        w,p = ss.wilcoxon(data[i],data[y],correction=True)
         print(w, p)
         w,p = ss.mannwhitneyu(data[i],data[y])
         print(w, p)
@@ -66,55 +74,9 @@ for i in range(0,len(data)):
         '''
 
 
+if debug: print(len(dat))
+if debug: print(dat)
 
-table='''\\begin{{frame}}{{Results - Wilcoxon}}
-\\begin{{block}}{{Wilcoxon signed-rank test}}
-\\begin{{table}}[]
-    \centering
-    \\begin{{tabular}}{{c?c|c|c|c}}
-          & ST & ST-i & MT & MT-i \\\\
-         \specialrule{{.1em}}{{.05em}}{{.05em}}
-         ST &  & {0:.4f} & {1:.4f} & {2:.4f}\\\\
-         ST-i & {0:.4f} & & {3:.4f} & {4:.4f}\\\\
-         MT & {1:.4f} & {3:.4f} & & {5:.4f}\\\\
-         MT-i & {2:.4f} & {4:.4f} & {5:.4f} &
-    \end{{tabular}}
-\end{{table}}
-\end{{block}}
-\end{{frame}}'''
-
-print(len(dat))
-print(dat)
-
-table=table.format(*dat)
-
-
-
-print(table)
-
-
-table='''\\begin{{frame}}{{Results - FDR}}
-\\begin{{block}}{{FDR correction}}
-\\begin{{table}}[]
-    \centering
-    \\begin{{tabular}}{{c?c|c|c|c}}
-          & ST & ST-i & MT & MT-i \\\\
-         \specialrule{{.1em}}{{.05em}}{{.05em}}
-         \multirow{{2}}{{*}}{{ST}} &  & {6} & {7} & {8}\\\\
-          &  & {0} & {1} & {2}\\\\
-         \hline
-         \multirow{{2}}{{*}}{{ST-i}} & {6} &  & {9} & {10}\\\\
-          & {0} &  & {3} & {4}\\\\
-         \hline
-         \multirow{{2}}{{*}}{{MT}} & {7} & {9} &  & {11}\\\\
-          & {1} & {3} &  & {5}\\\\
-         \hline
-         \multirow{{2}}{{*}}{{MT-i}} & {8} & {10} & {11} &\\\\
-          & {2} & {4} & {5} & 
-    \end{{tabular}}
-\end{{table}}
-\end{{block}}
-\end{{frame}}'''
 
 
 #FDR CORRECTION
@@ -123,7 +85,56 @@ from mne.stats import fdr_correction
 w,p = fdr_correction(dat)
 print(w, p)
 
-#non sono sicuro
-table=table.format(*w,*p)
 
+
+#LATEX PRINT
+
+print("\n\nLATEX TABLE CODE \n\n")
+
+table=f"""\\begin{{frame}}{{Results - Wilcoxon}}
+\\begin{{block}}{{Wilcoxon signed-rank test}}
+\\begin{{table}}[]
+    \centering
+    \\begin{{tabular}}{{c?c|c|c|c}}
+          & ST & ST-i & MT & MT-i \\\\
+         \specialrule{{.1em}}{{.05em}}{{.05em}}
+         ST &  & {formatNumber(dat[0])} & {formatNumber(dat[1])} & {formatNumber(dat[2])}\\\\
+         ST-i & {formatNumber(dat[0])} & & {formatNumber(dat[3])} & {formatNumber(dat[4])}\\\\
+         MT & {formatNumber(dat[1])} & {formatNumber(dat[3])} & & {formatNumber(dat[5])}\\\\
+         MT-i & {formatNumber(dat[2])} & {formatNumber(dat[4])} & {formatNumber(dat[5])} &
+    \end{{tabular}}
+\end{{table}}
+\end{{block}}
+\end{{frame}}"""
+
+table2=f"""\\begin{{frame}}{{Results - FDR}}
+\\begin{{block}}{{FDR correction}}
+\\begin{{table}}[]
+    \centering
+    \\begin{{tabular}}{{c?c|c|c|c}}
+          & ST & ST-i & MT & MT-i \\\\
+         \specialrule{{.1em}}{{.05em}}{{.05em}}
+         \multirow{{2}}{{*}}{{ST}} &  & {formatNumber(p[0])} & {formatNumber(p[1])} & {formatNumber(p[2])}\\\\
+          &  & {w[0]} & {w[1]} & {w[2]}\\\\
+         \hline
+         \multirow{{2}}{{*}}{{ST-i}} & {formatNumber(p[0])} &  & {formatNumber(p[3])} & {formatNumber(p[4])}\\\\
+          & {w[0]} &  & {w[3]} & {w[4]}\\\\
+         \hline
+         \multirow{{2}}{{*}}{{MT}} & {formatNumber(p[1])} & {formatNumber(p[3])} &  & {formatNumber(p[5])}\\\\
+          & {w[2]} & {w[3]} &  & {w[5]}\\\\
+         \hline
+         \multirow{{2}}{{*}}{{MT-i}} & {formatNumber(p[2])} & {formatNumber(p[4])} & {formatNumber(p[5])} &\\\\
+          & {w[1]} & {w[4]} & {w[5]} & 
+    \end{{tabular}}
+\end{{table}}
+\end{{block}}
+\end{{frame}}"""
+
+
+
+
+#table=table.format(*dat)
 print(table)
+
+#table2=table2.format(*w,*p)
+print(table2)

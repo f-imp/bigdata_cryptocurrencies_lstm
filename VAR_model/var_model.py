@@ -135,7 +135,7 @@ except OSError:
 else:
     print("Successfully created the directory %s " % out_path+"/"+"result")
 
-with open(out_path + "/"+"final/" + 'result.txt', 'w+') as out:
+with open(out_path + "/"+"final/" + 'RMSE.txt', 'w+') as out:
     final = math.sqrt(np.mean(result['sq_errors']))
     out.write(str(final))
 pd.DataFrame(result).to_csv(out_path + "/"+"final/" + 'predictions.csv')

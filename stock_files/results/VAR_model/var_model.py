@@ -131,7 +131,7 @@ for csv in os.listdir(out_path):
     result['predicted'].append(res['Predicted'][0])
     result['date'].append(csv[15:25])
 
-with open(out_path + 'result.txt', 'w+') as out:
+with open(out_path + 'RMSE.txt', 'w+') as out:
     final = math.sqrt(np.mean(result['sq_errors']))
     out.write(str(final))
 pd.DataFrame(result).to_csv(out_path + 'predictions.csv')

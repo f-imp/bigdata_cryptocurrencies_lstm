@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from crypto_utility import experiments
-from crypto_utility.report_data import report_configurations_exp1, report_stockseries_exp1
+from crypto_utility.report_data import report_configurations_SingleTarget, report_stockseries_SingleTarget
 
 np.random.seed(0)
 
@@ -127,12 +127,11 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
             pd.DataFrame(data=errors_file).to_csv(
                 EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
-
-    report_configurations_exp1(temporal_sequence_used=temporal_sequence, neurons_used=number_neurons,
+    report_configurations_SingleTarget(temporal_sequence_used=temporal_sequence, neurons_used=number_neurons,
                                name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                                name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
 
-    report_stockseries_exp1(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+    report_stockseries_SingleTarget(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                             name_folder_report=REPORT_FOLDER_NAME,
                             name_files_output="report")
 

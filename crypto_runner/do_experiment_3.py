@@ -16,7 +16,7 @@ from keras.models import load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from itertools import product
 from crypto_utility import test_set, experiments
-from crypto_utility.report_data import report_configurations_exp3, report_stockseries_exp3
+from crypto_utility.report_data import report_configurations_MultiTarget, report_stockseries_MultiTarget
 
 np.random.seed(0)
 
@@ -162,12 +162,14 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
         pd.DataFrame(data=errors_file).to_csv(
             EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
-    # report_configurations_exp3(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
-    #                            name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
-    #
-    # report_stockseries_exp3(names_series=names_crypto, name_folder_experiment=EXPERIMENT,
-    #                         name_folder_result_experiment=RESULT_PATH,
-    #                         name_folder_report=REPORT_FOLDER_NAME, name_files_output="report")
+    report_configurations_MultiTarget(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+                                      name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
+
+    report_stockseries_MultiTarget(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+                                   name_folder_report=REPORT_FOLDER_NAME, name_files_output="report",
+                                   original_datapath=DATA_PATH,
+                                   features_to_exclude_from_scaling=features_to_exclude_from_scaling)
+
     return
 
 

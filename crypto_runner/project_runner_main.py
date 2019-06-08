@@ -4,7 +4,8 @@ from crypto_utility import test_set, experiments,tensor_data
 from crypto_runner import do_preprocessing,build_testset_dates
 import os
 import numpy as np
-from crypto_utility.report_data import report_configurations_exp1, report_stockseries_exp1
+from crypto_utility.report_data import report_configurations_SingleTarget, report_stockseries_SingleTarget
+from crypto_utility.report_data import report_configurations_MultiTarget, report_stockseries_MultiTarget
 
 import warnings
 
@@ -58,7 +59,8 @@ TEST_SET = test_set.get_testset("../crypto_testset/from_2016_07_01_until_2017_06
 #It is possible to run them all but sometimes the RAM becomes full (some kind of memory leak) and execution becomes slow as hell
 #So we suggests to run one experiment at a time commenting the others
 #Also delete previous results and their folder before running
-'''
+
+
 #
 # # ------------------------------------ EXPERIMENT ONE (single + basic) ------------------------------------
 
@@ -78,6 +80,7 @@ single_target(EXPERIMENT=EXPERIMENT_ONE, DATA_PATH=DATA_PATH_ONE, TENSOR_DATA_PA
 
 
 
+
 #
 # # ------------------------------------ EXPERIMENT TWO (single + indicators) ------------------------------------
 EXPERIMENT_TWO = "../SingleTarget_Data_with_Indicators"
@@ -88,9 +91,6 @@ single_target(EXPERIMENT=EXPERIMENT_TWO, DATA_PATH=DATA_PATH_TWO, TENSOR_DATA_PA
                number_neurons=number_neurons_LSTM,
                features_to_exclude_from_scaling=SINGLE_features_to_exclude_from_scaling, testing_set=TEST_SET)
 
-
-
-                        
 
                         
 #                        
@@ -118,29 +118,62 @@ multi_target(EXPERIMENT=EXPERIMENT_FOUR, DATA_PATH=DATA_PATH_FOUR, TENSOR_DATA_P
              number_neurons=number_neurons_LSTM,
              features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling, testing_set=TEST_SET)
 
-'''
+
+
 '''
 #Utili in caso si voglia addestare le configurazioni a pezzi
 #Generazione report esterna per Experiment One
+EXPERIMENT_ONE = "../SingleTarget_Data"
 RESULT_PATH = "Result"
 REPORT_FOLDER_NAME ="Report"
-report_configurations_exp1(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
+report_configurations_SingleTarget(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
                            name_folder_experiment=EXPERIMENT_ONE, name_folder_result_experiment=RESULT_PATH,
                            name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
 
-report_stockseries_exp1(name_folder_experiment=EXPERIMENT_ONE, name_folder_result_experiment=RESULT_PATH,
+report_stockseries_SingleTarget(name_folder_experiment=EXPERIMENT_ONE, name_folder_result_experiment=RESULT_PATH,
                         name_folder_report=REPORT_FOLDER_NAME,
                         name_files_output="report")
+
+EXPERIMENT_TWO = "../SingleTarget_Data_with_Indicators"
 
 #Generazione report esterna per Experiment Two
 RESULT_PATH = "Result"
 REPORT_FOLDER_NAME ="Report"
-report_configurations_exp1(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
+report_configurations_SingleTarget(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
                            name_folder_experiment=EXPERIMENT_TWO, name_folder_result_experiment=RESULT_PATH,
                            name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
 
-report_stockseries_exp1(name_folder_experiment=EXPERIMENT_TWO, name_folder_result_experiment=RESULT_PATH,
+report_stockseries_SingleTarget(name_folder_experiment=EXPERIMENT_TWO, name_folder_result_experiment=RESULT_PATH,
                         name_folder_report=REPORT_FOLDER_NAME,
                         name_files_output="report")
 
+
+EXPERIMENT_THREE = "../MultiTarget_Data"
+cryptocurrenciesSymbols=["BTC","XRP","LTC","XLM","XMR","DASH","XEM","DOGE"]
+
+RESULT_PATH = "Result"
+REPORT_FOLDER_NAME ="Report"
+
+report_configurations_MultiTarget(name_folder_experiment=EXPERIMENT_THREE, name_folder_result_experiment=RESULT_PATH,
+                                  name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
+
+report_stockseries_MultiTarget(name_folder_experiment=EXPERIMENT_THREE, name_folder_result_experiment=RESULT_PATH,
+                               name_folder_report=REPORT_FOLDER_NAME, name_files_output="report", original_datapath=DATA_PATHS[2],
+                               features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling)
+
+
+
+EXPERIMENT_FOUR = "../MultiTarget_Data_with_Indicators"
+
+#Generazione report esterna per Experiment Two
+RESULT_PATH = "Result"
+REPORT_FOLDER_NAME ="Report"
+
+
+report_configurations_MultiTarget(name_folder_experiment=EXPERIMENT_FOUR, name_folder_result_experiment=RESULT_PATH,
+                                  name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
+
+report_stockseries_MultiTarget(name_folder_experiment=EXPERIMENT_FOUR, name_folder_result_experiment=RESULT_PATH,
+                               name_folder_report=REPORT_FOLDER_NAME, name_files_output="report", original_datapath=DATA_PATHS[2],
+                               features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling)
 '''
