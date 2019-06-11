@@ -7,6 +7,7 @@
 /.idea/workspace.xml
 /crypto_utility/__pycache__/
 /utility/__pycache__/
+/.idea
 /.idea/*
 /top5Tensor
 /top5Tensor/*
