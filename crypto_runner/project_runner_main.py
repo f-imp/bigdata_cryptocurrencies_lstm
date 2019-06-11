@@ -15,14 +15,14 @@ warnings.filterwarnings("ignore")
 #build_testset_dates.run()
 
 #set the day to use to cut the data (the first day to use in training, should be the first day of the cryptocurrency with less entry)
-first_day ="2015-03-30" #Top8 Nem first day
-cryptocurrenciesSymbols=["BTC","XRP","LTC","XLM","XMR","DASH","XEM","DOGE"] #Top8
+#first_day ="2015-03-30" #Top8 Nem first day
+#cryptocurrenciesSymbols=["BTC","XRP","LTC","XLM","XMR","DASH","XEM","DOGE"] #Top8
 
-#first_day = "2014-09-03" #Top5 Stellar first day
-#cryptocurrenciesSymbols=["BTC","LTC","XLM","DASH","DOGE"] #Top5
+first_day = "2014-09-03" #Top5 Stellar first day
+cryptocurrenciesSymbols=["BTC","LTC","XLM","DASH","DOGE"] #Top5
 
 #Preprocess dataset data (Relaunch preprocessing if data changes)
-do_preprocessing.run(first_day,cryptocurrenciesSymbols)
+#do_preprocessing.run(first_day,cryptocurrenciesSymbols)
 
 #
 # # -------- PARAMETERS ----------------------------------------------------------------------------
@@ -75,7 +75,7 @@ TEST_SET = test_set.get_testset("../crypto_testset/from_2016_07_01_until_2017_06
 #So we suggests to run one experiment at a time commenting the others
 #Also delete previous results and their folder before running
 
-'''
+
 #
 # # ------------------------------------ EXPERIMENT ONE (single + basic) ------------------------------------
 EXPERIMENT_ONE = "../SingleTarget_Data"
@@ -127,8 +127,8 @@ multi_target(EXPERIMENT=EXPERIMENT_FOUR, DATA_PATH=DATA_PATH_FOUR, TENSOR_DATA_P
 
 
 
-
-#Utili in caso si voglia addestare le configurazioni a pezzi e quindi generare i grafici in un secondo momento e non alla fine del singolo esperimento
+'''
+#Utili in caso si voglia addestare le configurazioni a pezzi e quindi generare i grafici in un secondo momento e non alla fine dei singoli esperimenti
 #Generazione report esterna per Experiment One
 EXPERIMENT_ONE = "../SingleTarget_Data"
 RESULT_PATH = "Result"

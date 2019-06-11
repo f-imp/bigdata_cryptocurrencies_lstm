@@ -55,7 +55,7 @@ for csv in os.listdir(PATH):
                 if line.count(data):
                     line=line.split(",")
                     toWrite.append(csv.replace(".csv","") + "," + data + "," + line[1] + "," + line[4])
-                    #toWrite.append(csv.replace(".csv","") + "," + data + "," + line[17] + "," + line[20])
+                    #toWrite.append(csv.replace(".csv","") + "," + data + "," + line[17] + "," + line[20]) normalized?
                     break
             f.seek(0)
 
