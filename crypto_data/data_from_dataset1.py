@@ -8,7 +8,14 @@
 header="DateTime,Open,High,Low,Close,Volume,VolumeBTC,Symbol"
 
 #crypto da cercare
+#TOP10
+#cryptocurrenciesSymbols=["BTC","XRP","LTC","ETC","ETH","XLM","XMR","DASH","XEM","DOGE"]
+
+#TOP8
 cryptocurrenciesSymbols=["BTC","XRP","LTC","XLM","XMR","DASH","XEM","DOGE"]
+
+#TOP5
+#cryptocurrenciesSymbols=["BTC","LTC","XLM","DASH","DOGE"]
 
 for crypto in cryptocurrenciesSymbols:
     fileToRead=""
@@ -23,6 +30,7 @@ for crypto in cryptocurrenciesSymbols:
         #per prendere quelli giusti controllo se sta la virgola a sinistra e "a capo" a destra del simbolo
         if line.count(","+crypto+"\n") >0:
             line = line[:line.find(" ")] + line[line.find(","):]
+            if crypto=="USD": line=line.replace("USD","BTC")
             fileToWrite.write(line)
             #debug print
             #print(line[:-1])

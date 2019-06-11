@@ -1,11 +1,4 @@
 import scipy.stats as ss
-from decimal import Decimal
-
-def formatNumber(number):
-    if number<=0.0001:
-        return (f"{Decimal(number):.2e}")
-    else:
-        return (f"{Decimal(number):.4f}")
 
 PATHS=["SingleTarget_Data","SingleTarget_Data_with_Indicators","MultiTarget_Data","MultiTarget_Data_with_Indicators"]
 
@@ -84,57 +77,3 @@ from mne.stats import fdr_correction
 
 w,p = fdr_correction(dat)
 print(w, p)
-
-
-
-#LATEX PRINT
-
-print("\n\nLATEX TABLE CODE \n\n")
-
-table=f"""\\begin{{frame}}{{Results - Wilcoxon}}
-\\begin{{block}}{{Wilcoxon signed-rank test}}
-\\begin{{table}}[]
-    \centering
-    \\begin{{tabular}}{{c?c|c|c|c}}
-          & ST & ST-i & MT & MT-i \\\\
-         \specialrule{{.1em}}{{.05em}}{{.05em}}
-         ST &  & {formatNumber(dat[0])} & {formatNumber(dat[1])} & {formatNumber(dat[2])}\\\\
-         ST-i & {formatNumber(dat[0])} & & {formatNumber(dat[3])} & {formatNumber(dat[4])}\\\\
-         MT & {formatNumber(dat[1])} & {formatNumber(dat[3])} & & {formatNumber(dat[5])}\\\\
-         MT-i & {formatNumber(dat[2])} & {formatNumber(dat[4])} & {formatNumber(dat[5])} &
-    \end{{tabular}}
-\end{{table}}
-\end{{block}}
-\end{{frame}}"""
-
-table2=f"""\\begin{{frame}}{{Results - FDR}}
-\\begin{{block}}{{FDR correction}}
-\\begin{{table}}[]
-    \centering
-    \\begin{{tabular}}{{c?c|c|c|c}}
-          & ST & ST-i & MT & MT-i \\\\
-         \specialrule{{.1em}}{{.05em}}{{.05em}}
-         \multirow{{2}}{{*}}{{ST}} &  & {formatNumber(p[0])} & {formatNumber(p[1])} & {formatNumber(p[2])}\\\\
-          &  & {w[0]} & {w[1]} & {w[2]}\\\\
-         \hline
-         \multirow{{2}}{{*}}{{ST-i}} & {formatNumber(p[0])} &  & {formatNumber(p[3])} & {formatNumber(p[4])}\\\\
-          & {w[0]} &  & {w[3]} & {w[4]}\\\\
-         \hline
-         \multirow{{2}}{{*}}{{MT}} & {formatNumber(p[1])} & {formatNumber(p[3])} &  & {formatNumber(p[5])}\\\\
-          & {w[2]} & {w[3]} &  & {w[5]}\\\\
-         \hline
-         \multirow{{2}}{{*}}{{MT-i}} & {formatNumber(p[2])} & {formatNumber(p[4])} & {formatNumber(p[5])} &\\\\
-          & {w[1]} & {w[4]} & {w[5]} & 
-    \end{{tabular}}
-\end{{table}}
-\end{{block}}
-\end{{frame}}"""
-
-
-
-
-#table=table.format(*dat)
-print(table)
-
-#table2=table2.format(*w,*p)
-print(table2)

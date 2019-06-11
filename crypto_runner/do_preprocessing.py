@@ -2,7 +2,7 @@ import os
 
 from crypto_utility import preprocessing
 
-def run():
+def run(fd, COINS):
 
     # PRE PROCESSING
     # Set the name of folder in which save all intermediate results
@@ -33,8 +33,9 @@ def run():
 
     for each_stock in os.listdir(raw_data):
         name = each_stock.replace(".csv", "")
-        file = raw_data + each_stock
-        preprocessing.generate_normal(file, output_indicators_path, name)
+        if name in COINS:
+            file = raw_data + each_stock
+            preprocessing.generate_normal(file, output_indicators_path, name)
 
     # ------------------------------------------
     # STEP.1: Add Additional Features
@@ -55,8 +56,9 @@ def run():
     lookback = [14, 30, 60]
     for each_stock in os.listdir(raw_data):
         name = each_stock.replace(".csv", "")
-        file = raw_data + each_stock
-        preprocessing.generate_indicators(file, "Close", lookback, output_indicators_path, name)
+        if name in COINS:
+            file = raw_data + each_stock
+            preprocessing.generate_indicators(file, "Close", lookback, output_indicators_path, name)
 
 
     # ------------------------------------------
@@ -96,15 +98,16 @@ def run():
     fileToWrite = open("../" + name_folder + "/" + folder_step_three + "/all.csv", "w+")
     prima_volta=True
     for stock in os.listdir(raw_data):
-        fileToRead=open(raw_data+stock, "r")
-        if prima_volta:
-            prima_volta=False
-        else:
-            fileToRead.readline()
-        for line in fileToRead:
-            fileToWrite.write(line)
-        fileToRead.close()
-    fileToWrite.close()
+        if stock in COINS:
+            fileToRead=open(raw_data+stock, "r")
+            if prima_volta:
+                prima_volta=False
+            else:
+                fileToRead.readline()
+            for line in fileToRead:
+                fileToWrite.write(line)
+            fileToRead.close()
+        fileToWrite.close()
 
     data_path = "../" + name_folder + "/" + folder_step_one + "/"
     fileToWrite = open("../" + name_folder + "/" + folder_step_three + "/all_with_indicators.csv", "w+")
@@ -141,7 +144,8 @@ def run():
 
     folder_step_four = "step4_cutdata"
 
-    first_day ="2015-03-30"
+    first_day = fd
+
 
     steps=["","_indicators"]
 

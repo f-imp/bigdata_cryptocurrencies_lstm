@@ -1,4 +1,4 @@
-table1="""\\begin{{frame}}{{Results - Stock Oriented}}
+table1_inizio="""\\begin{{frame}}{{Results - Stock Oriented}}
 \\begin{{block}}{{RMSE - PH_TITLE}}
 \\begin{{table}}[] 
   \\begin{{tabular}}{{c?c|c|c?c|c|c}}
@@ -6,43 +6,31 @@ table1="""\\begin{{frame}}{{Results - Stock Oriented}}
         & \multicolumn{{3}}{{c}}{{256}}\\\\
         \hline
         Days & 30 & 100 & 200 & 30 & 100 & 200\\\\
-        \specialrule{{.1em}}{{.05em}}{{.05em}}
-         BTC & {} & {} & {} & {} & {} & {}\\\\
-         DASH & {} & {} & {} & {} & {} & {}\\\\
-         DOGE & {} & {} & {} & {} & {} & {}\\\\
-         LTC & {} & {} & {} & {} & {} & {}\\\\
-         XEM & {} & {} & {} & {} & {} & {}\\\\
-         XLM & {} & {} & {} & {} & {} & {}\\\\
-         XMR & {} & {} & {} & {} & {} & {}\\\\
-         XRP & {} & {} & {} & {} & {} & {}
-    \end{{tabular}}
+        \specialrule{{.1em}}{{.05em}}{{.05em}}"""
+
+table1_fine="""    \end{{tabular}}
 \end{{table}}
 \end{{block}}
 \end{{frame}}"""
 
-table2="""\\begin{{frame}}{{Results - Configuration Oriented}}
+table2_inizio="""\\begin{{frame}}{{Results - Configuration Oriented}}
 \\begin{{block}}{{RMSE - PH_TITLE}}
 \\begin{{table}}[]
     \centering
     \\begin{{tabular}}{{c?c|c|c|c}}
          Coin & ST & ST-i & MT & MT-i \\\\
-         \specialrule{{.1em}}{{.05em}}{{.05em}}
-         BTC & {} & {} & {} & {}\\\\
-         DASH & {} & {} & {} & {}\\\\
-         DOGE & {} & {} & {} & {}\\\\
-         LTC & {} & {} & {} & {}\\\\
-         XEM & {} & {} & {} & {}\\\\
-         XLM & {} & {} & {} & {}\\\\
-         XMR & {} & {} & {} & {}\\\\
-         XRP & {} & {} & {} & {}
-    \end{{tabular}}
+         \specialrule{{.1em}}{{.05em}}{{.05em}}"""
+
+table2_fine="""    \end{{tabular}}
 \end{{table}}
 \end{{block}}
 \end{{frame}}"""
 
+pretable3="""\section{Results Average}
+\subsection{Results Average}\n"""
 
-table3="""\\begin{{frame}}{{Results - Type Oriented}}
-\\begin{{block}}{{RMSE}}
+table3="""\\begin{{frame}}{{Results - Neurons Average}}
+\\begin{{block}}{{Average RMSE}}
 \\begin{{table}}[]
     \centering
     \\begin{{tabular}}{{c?c|c|c}}
@@ -56,10 +44,16 @@ table3="""\\begin{{frame}}{{Results - Type Oriented}}
     \end{{tabular}}
 \end{{table}}
 \end{{block}}
+\\begin{{block}}{{Baseline RMSE}}
+\\begin{{itemize}}
+    \item \\textbf{{Simple:}} 0.0378
+    \item \\textbf{{VAR Model:}} 0.0378
+\end{{itemize}}
+\end{{block}}
 \end{{frame}}"""
 
-table4="""\\begin{{frame}}{{Results - Days Oriented}}
-\\begin{{block}}{{RMSE}}
+table4="""\\begin{{frame}}{{Results - Days Average}}
+\\begin{{block}}{{Average RMSE}}
 \\begin{{table}}[]
     \centering
     \\begin{{tabular}}{{c?c|c|c|c}}
@@ -72,6 +66,12 @@ table4="""\\begin{{frame}}{{Results - Days Oriented}}
          Multi-target indicators & {} & {} & {} & {}
     \end{{tabular}}
 \end{{table}}
+\end{{block}}
+\\begin{{block}}{{Baseline RMSE}}
+\\begin{{itemize}}
+    \item \\textbf{{Simple:}} 0.0378
+    \item \\textbf{{VAR Model:}} 0.0378
+\end{{itemize}}
 \end{{block}}
 \end{{frame}}"""
 
@@ -144,7 +144,32 @@ config_index=-1
 neuroni=[128,256]
 days=[30,100,200]
 
-COINS=["BTC","DASH","DOGE","LTC","XEM","XLM","XMR","XRP"]
+#TOP10
+#COINS=['BTC', 'DASH', 'DOGE', 'ETC', 'ETH', 'LTC', 'XEM', 'XLM', 'XMR', 'XRP']
+
+#TOP8
+#COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XEM', 'XLM', 'XMR', 'XRP']
+
+#TOP5
+COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XLM']
+
+table1_mezzo=""
+
+for i in range(0,len(COINS)):
+    if i==len(COINS): table1_mezzo=table1_mezzo+"\n         "+COINS[i]+" & {} & {} & {} & {} & {} & {}"
+    else: table1_mezzo=table1_mezzo+"\n         "+COINS[i]+" & {} & {} & {} & {} & {} & {}\\\\"
+
+table2_mezzo=""
+
+for i in range(0,len(COINS)):
+    if i==len(COINS): table2_mezzo=table2_mezzo+"\n         "+COINS[i]+" & {} & {} & {} & {}\\\\"
+    else: table2_mezzo=table2_mezzo+"\n         "+COINS[i]+" & {} & {} & {} & {}\\\\"
+
+table1=table1_inizio+table1_mezzo+"\n"+table1_fine
+table2=table2_inizio+table2_mezzo+"\n"+table2_fine
+
+
+
 
 data=[]
 
@@ -219,7 +244,7 @@ for i in range (0,len(title)):
     create_latex_table_red(tabella)
 
 
-
+print(pretable3)
 #---- table 3
 
 data3=[]
