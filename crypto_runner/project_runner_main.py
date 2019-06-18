@@ -75,7 +75,6 @@ TEST_SET = test_set.get_testset("../crypto_testset/from_2016_07_01_until_2017_06
 #So we suggests to run one experiment at a time commenting the others
 #Also delete previous results and their folder before running
 
-
 #
 # # ------------------------------------ EXPERIMENT ONE (single + basic) ------------------------------------
 EXPERIMENT_ONE = "../SingleTarget_Data"
@@ -163,14 +162,24 @@ cryptocurrenciesSymbols=["BTC","XRP","LTC","XLM","XMR","DASH","XEM","DOGE"]
 RESULT_PATH = "Result"
 REPORT_FOLDER_NAME ="Report"
 
+report_configurations_SingleTarget(temporal_sequence_used=temporal_sequence_considered, neurons_used=number_neurons_LSTM,
+                           name_folder_experiment=EXPERIMENT_THREE, name_folder_result_experiment=RESULT_PATH,
+                           name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
+
+report_stockseries_SingleTarget(name_folder_experiment=EXPERIMENT_THREE, name_folder_result_experiment=RESULT_PATH,
+                        name_folder_report=REPORT_FOLDER_NAME,
+                        name_files_output="report")
+
+
+
+
+
 report_configurations_MultiTarget(name_folder_experiment=EXPERIMENT_THREE, name_folder_result_experiment=RESULT_PATH,
                                   name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
 
 report_stockseries_MultiTarget(name_folder_experiment=EXPERIMENT_THREE, name_folder_result_experiment=RESULT_PATH,
                                name_folder_report=REPORT_FOLDER_NAME, name_files_output="report", original_datapath=DATA_PATHS[2],
                                features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling)
-
-
 
 EXPERIMENT_FOUR = "../MultiTarget_Data_with_Indicators"
 

@@ -20,6 +20,7 @@ np.random.seed(0)
 
 def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, number_neurons, learning_rate,
                   features_to_exclude_from_scaling, testing_set):
+    MODELS_PATH="Models"
     RESULT_PATH = "Result"
     REPORT_FOLDER_NAME = "Report"
 
@@ -31,6 +32,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
     os.makedirs(TENSOR_DATA_PATH, exist_ok=True)
 
     os.mkdir(EXPERIMENT + "/" + RESULT_PATH)
+    os.mkdir(EXPERIMENT + "/" + MODELS_PATH)
 
     for s in series:
         #if DATA_PATH == "../crypto_preprocessing/step1_indicators/":
@@ -42,6 +44,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
         # create a folder for data
         os.makedirs(TENSOR_DATA_PATH + "/" + stock_name, exist_ok=True)
         # create a folder for results
+        os.mkdir(EXPERIMENT + "/" + MODELS_PATH + "/" + stock_name)
         os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name)
         data_compliant, features, features_without_date, scaler = experiments.prepare_input_forecasting(
             DATA_PATH + "/" + s,
@@ -55,7 +58,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
             predictions_file = {'symbol': [], 'date': [], 'observed_norm': [], 'predicted_norm': [],
                                 'observed_denorm': [],
                                 'predicted_denorm': []}
-            errors_file = {'symbol': [], 'date': [], 'rmse_norm': [], 'rmse_denorm': []}
+            errors_file = {'symbol': [], 'rmse_norm': [], 'rmse_denorm': []}
             # define a name for this configuration (following folder)
             configuration_name = "LSTM_" + str(neurons) + "_neurons_" + str(temporal) + "_days"
             # Create a folder to save
@@ -63,8 +66,9 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
             best_model = "model"
             # - statistics (results)
             statistics = "stats"
+            os.mkdir(EXPERIMENT + "/" + MODELS_PATH + "/" + stock_name + "/" + configuration_name)
+            os.mkdir(EXPERIMENT + "/" + MODELS_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model)
             os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name)
-            os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model)
             os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics)
             for data_tester in testing_set:
                 train, test = experiments.train_test_split_w_date(features, dataset_tensor, data_tester)
@@ -82,21 +86,18 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
                                                              epochs=100,
                                                              batch_size=256,
                                                              dimension_last_layer=1,
-                                                             model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
+                                                             model_path=EXPERIMENT + "/" + MODELS_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
                 else:
                     model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                              learning_rate=learning_rate,
                                                              dropout=0.2,
                                                              epochs=100,
                                                              batch_size=256, dimension_last_layer=1, model=model,
-                                                             model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
+                                                             model_path=EXPERIMENT + "/" + MODELS_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
                 # Tiriamo fuori la predizione per ogni esempio di test
                 test_prediction = model.predict(x_test)
-                rmse = experiments.get_RMSE(y_test, test_prediction)
                 y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, 1))
-
                 test_prediction_denorm = scaler.inverse_transform(test_prediction)
-                rmse_denorm = experiments.get_RMSE(y_test_denorm, test_prediction_denorm)
 
                 y_test = float(y_test)
                 test_prediction = float(test_prediction)
@@ -111,10 +112,16 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
                 predictions_file['observed_denorm'].append(y_test_denorm)
                 predictions_file['predicted_denorm'].append(test_prediction_denorm)
 
-                errors_file['symbol'].append(stock_name)
-                errors_file['date'].append(data_tester)
-                errors_file['rmse_norm'].append(rmse)
-                errors_file['rmse_denorm'].append(rmse_denorm)
+
+
+
+
+            errors_file['symbol'].append(stock_name)
+            rmse = experiments.get_RMSE(predictions_file['observed_norm'], predictions_file['predicted_norm'])
+            rmse_denorm = experiments.get_RMSE(predictions_file['observed_denorm'], predictions_file['predicted_denorm'])
+            errors_file['rmse_norm'].append(rmse)
+            errors_file['rmse_denorm'].append(rmse_denorm)
+
             pd.DataFrame(data=predictions_file).to_csv(
                 EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
             pd.DataFrame(data=errors_file).to_csv(
@@ -122,6 +129,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
 
 
     #commentare se non si vuole generare i report alla fine dell'addestramento
+    #to_TEST
     report_configurations_SingleTarget(temporal_sequence_used=temporal_sequence, neurons_used=number_neurons,
                                name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                                name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")

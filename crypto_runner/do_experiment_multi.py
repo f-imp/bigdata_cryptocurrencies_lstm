@@ -4,6 +4,7 @@ import pandas as pd
 from itertools import product
 from crypto_utility import experiments
 from crypto_utility.report_data import report_configurations_MultiTarget, report_stockseries_MultiTarget
+from crypto_utility.report_data import report_configurations_SingleTarget, report_stockseries_SingleTarget
 
 np.random.seed(0)
 
@@ -19,6 +20,7 @@ np.random.seed(0)
 
 def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, number_neurons, learning_rate,dimension_last_layer,
                  features_to_exclude_from_scaling, testing_set):
+    MODELS_PATH="Models"
     RESULT_PATH = "Result"
     REPORT_FOLDER_NAME = "Report"
 
@@ -28,6 +30,7 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
     os.makedirs(TENSOR_DATA_PATH, exist_ok=True)
 
     os.mkdir(EXPERIMENT + "/" + RESULT_PATH)
+    os.mkdir(EXPERIMENT + "/" + MODELS_PATH)
 
     if "Indicators" in EXPERIMENT:
         s = "horizontal_indicators.csv"
@@ -66,7 +69,6 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
             predictions_file[n + "_observed_denorm"] = []
             predictions_file[n + "_predicted_denorm"] = []
 
-        errors_file = {'symbol': [], 'date': [], 'rmse_norm': [], 'rmse_denorm': []}
         # define a name for this configuration (following folder)
         configuration_name = "LSTM_" + str(neurons) + "_neurons_" + str(temporal) + "_days"
         # Create a folder to save
@@ -74,10 +76,12 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
         best_model = "model"
         # - statistics (results)
         statistics = "stats"
-        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + configuration_name)
-        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + configuration_name + "/" + best_model)
-        os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + statistics)
+
+        os.mkdir(EXPERIMENT + "/" + MODELS_PATH + "/" + configuration_name)
+        os.mkdir(EXPERIMENT + "/" + MODELS_PATH + "/" + configuration_name + "/" + best_model)
+
         for data_tester in testing_set:
+            print(data_tester)
             train, test = experiments.train_test_split_w_date(features, dataset_tensor, data_tester)
             train = train[:, :, 1:]
             test = test[:, :, 1:]
@@ -93,7 +97,7 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
                                                          epochs=100,
                                                          batch_size=256,
                                                          dimension_last_layer=dimension_last_layer,
-                                                         model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + best_model + "/")
+                                                         model_path=EXPERIMENT + "/" + MODELS_PATH + "/" + "/" + configuration_name + "/" + best_model + "/")
             else:
                 model, history = experiments.train_model(x_train, y_train, x_test, y_test, lstm_neurons=neurons,
                                                          learning_rate=learning_rate,
@@ -102,21 +106,14 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
                                                          batch_size=256,
                                                          dimension_last_layer=dimension_last_layer,
                                                          model=model,
-                                                         model_path=EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + best_model + "/")
+                                                         model_path=EXPERIMENT + "/" + MODELS_PATH + "/" + "/" + configuration_name + "/" + best_model + "/")
 
             # Tiriamo fuori la predizione per ogni esempio di test
             test_prediction = model.predict(x_test)
-            rmse = experiments.get_RMSE(y_test, test_prediction)
+
             y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, dimension_last_layer))
 
             test_prediction_denorm = scaler.inverse_transform(test_prediction)
-            rmse_denorm = experiments.get_RMSE(y_test_denorm, test_prediction_denorm)
-            '''
-            y_test = float(y_test)
-            test_prediction = float(test_prediction)
-            y_test_denorm = float(y_test_denorm)
-            test_prediction_denorm = float(test_prediction_denorm)
-            '''
 
             # Salvo i risultati nei dizionari
             predictions_file['symbol'].append(stock_name)
@@ -137,17 +134,45 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
             for n, v in zip(names_crypto, test_prediction_denorm[0]):
                 predictions_file[n + "_predicted_denorm"].append(float(v))
 
-            errors_file['symbol'].append(stock_name)
-            errors_file['date'].append(data_tester)
+
+
+        for n in names_crypto:
+            os.makedirs(EXPERIMENT + "/" + RESULT_PATH + "/" + n, exist_ok=True)
+            os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + n + "/" + configuration_name)
+            os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + n + "/" + configuration_name + "/" + statistics)
+
+            new_pred_file={}
+
+            new_pred_file['symbol']= []
+            for i in range (0,len(predictions_file['symbol'])): new_pred_file['symbol'].append(n)
+            new_pred_file['date']= predictions_file['date']
+            new_pred_file['observed_norm']= predictions_file[n+'_observed_norm']
+            new_pred_file['predicted_norm']= predictions_file[n+'_predicted_norm']
+            new_pred_file['observed_denorm']= predictions_file[n+'_observed_denorm']
+            new_pred_file['predicted_denorm']= predictions_file[n+'_predicted_denorm']
+
+            errors_file = {'symbol': [], 'rmse_norm': [], 'rmse_denorm': []}
+            errors_file['symbol'].append(n)
+            rmse = experiments.get_RMSE(new_pred_file['observed_norm'],new_pred_file['predicted_norm'])
+            rmse_denorm = experiments.get_RMSE(new_pred_file['observed_denorm'], new_pred_file['predicted_denorm'])
             errors_file['rmse_norm'].append(rmse)
             errors_file['rmse_denorm'].append(rmse_denorm)
-        pd.DataFrame(data=predictions_file).to_csv(
-            EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
-        pd.DataFrame(data=errors_file).to_csv(
-            EXPERIMENT + "/" + RESULT_PATH + "/" + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
+
+            pd.DataFrame(data=new_pred_file).to_csv(
+                EXPERIMENT + "/" + RESULT_PATH + "/" + n + "/" + configuration_name + "/" + statistics + "/" + 'predictions.csv')
+            pd.DataFrame(data=errors_file).to_csv(
+                EXPERIMENT + "/" + RESULT_PATH + "/" + n + "/" + configuration_name + "/" + statistics + "/" + 'errors.csv')
 
 
     #commentare se non si vuole generare i report alla fine dell'addestramento
+    report_configurations_SingleTarget(temporal_sequence_used=temporal_sequence, neurons_used=number_neurons,
+                               name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+                               name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
+
+    report_stockseries_SingleTarget(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+                            name_folder_report=REPORT_FOLDER_NAME,
+                            name_files_output="report")
+    '''
     report_configurations_MultiTarget(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                                       name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
 
@@ -155,5 +180,5 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
                                    name_folder_report=REPORT_FOLDER_NAME, name_files_output="report",
                                    original_datapath=DATA_PATH,
                                    features_to_exclude_from_scaling=features_to_exclude_from_scaling)
-
+    '''
     return
