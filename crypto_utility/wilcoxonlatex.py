@@ -21,7 +21,7 @@ days=[30,100,200]
 
 COINS=["BTC","DASH","DOGE","LTC","XEM","XLM","XMR","XRP"]
 
-COINS=["BTC","DASH","DOGE","LTC","XLM"]
+#COINS=["BTC","DASH","DOGE","LTC","XLM"]
 
 data=[]
 
@@ -33,7 +33,7 @@ data=[]
 
 
 for path in PATHS:
-    csv = "../" + path + "/Report/stockseries_oriented/"
+    csv = "../top8Result/" + path + "/Report/stockseries_oriented/"
     data1=[]
     for coin in COINS:
         for neur,dayz in product(neuroni,days):

@@ -29,11 +29,11 @@ def prepare_input_forecasting(path_series, features_to_exclude):
 def fromtemporal_totensor(dataset, window_considered, output_path, output_name):
     try:
         z = np.load(output_path + "/crypto_TensorFormat_" + output_name + "_" + str(window_considered) + '.npy')
-        print('Versione supervisionata trovata!')
+        print('Versione Tensor LSTM trovata!')
         # print("\n--- LETTO PRE-ESISTENTE\n", z, "\n---\n")
         return z
     except FileNotFoundError as e:
-        print('Versione supervisionata dei dati non trovata, creazione in corso...')
+        print('Versione Tensor LSTM dei dati non trovata, creazione in corso...')
         # 1 array
         # con "window_considered" righe
         # "dataset.shape[1]" colonne

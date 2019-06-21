@@ -21,13 +21,13 @@ for path in PATHS:
     print(path)
 
     for coin in COIN8:
-        if "SingleTarget_Data_with_Indicators" in path: coin=coin+"_with_indicators"
-        for fol in os.listdir("../"+ top8 + "/"+path+"/"+PATH+"/"+coin):
-            asd=pd.read_csv("../"+ top8 + "/"+path+"/"+PATH+"/"+coin+"/"+fol+"/"+file)
+       # if "SingleTarget_Data_with_Indicators" in path: coin=coin+"_with_indicators"
+        for conf in os.listdir("../"+ top8 + "/"+path+"/"+PATH+"/"+coin):
+            csv=pd.read_csv("../"+ top8 + "/"+path+"/"+PATH+"/"+coin+"/"+conf+"/"+file)
             i=0
-            for value in asd["predicted_norm"]:
+            for value in csv["predicted_norm"]:
                 if value <0 :
-                    print(asd["date"][i],asd["symbol"][i],asd["predicted_norm"][i],"(",asd["observed_norm"][i],")")
+                    print(csv["date"][i],csv["symbol"][i],csv["predicted_norm"][i],"(",csv["observed_norm"][i],")")
                     c1=c1+1
                 i=i+1
 
@@ -37,13 +37,13 @@ for path in PATHS:
     print(path)
 
     for coin in COIN5:
-        if "SingleTarget_Data_with_Indicators" in path: coin=coin+"_with_indicators"
-        for fol in os.listdir("../"+ top5 + "/"+path+"/"+PATH+"/"+coin):
-            asd=pd.read_csv("../" + top5 + "/"+path+"/"+PATH+"/"+coin+"/"+fol+"/"+file)
+        #if "SingleTarget_Data_with_Indicators" in path: coin=coin+"_with_indicators"
+        for conf in os.listdir("../"+ top5 + "/"+path+"/"+PATH+"/"+coin):
+            csv=pd.read_csv("../" + top5 + "/"+path+"/"+PATH+"/"+coin+"/"+conf+"/"+file)
             i=0
-            for value in asd["predicted_norm"]:
+            for value in csv["predicted_norm"]:
                 if value <0 :
-                    print(asd["date"][i],asd["symbol"][i],asd["predicted_norm"][i],"(",asd["observed_norm"][i],")")
+                    print(csv["date"][i],csv["symbol"][i],csv["predicted_norm"][i],"(",csv["observed_norm"][i],")")
                     c1=c1+1
                 i=i+1
 

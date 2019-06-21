@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 
 from crypto_utility import preprocessing
 
@@ -29,6 +30,7 @@ def run(fd, COINS):
         print("Creation of the directory %s failed" % folder_step_zero)
     else:
         print("Successfully created the directory %s " % folder_step_zero)
+
     output_indicators_path = "../" + name_folder + "/" + folder_step_zero + "/"
 
     for each_stock in os.listdir(raw_data):
@@ -36,6 +38,51 @@ def run(fd, COINS):
         if name in COINS:
             file = raw_data + each_stock
             preprocessing.generate_normal(file, output_indicators_path, name)
+
+    # ------------------------------------------
+    # STEP.0,5: Convert Values to USD and/or remove Volumes
+    # ------------------------------------------
+    # Convert Values to USD and/or remove Volumes
+
+    folder_step_half = "step0-5_data"
+    try:
+        os.mkdir("../" + name_folder + "/" + folder_step_half)
+    except OSError:
+        print("Creation of the directory %s failed" % folder_step_half)
+    else:
+        print("Successfully created the directory %s " % folder_step_half)
+
+    path = "../crypto_preprocessing/step0_data/"
+
+    USDBTC = []
+
+    for file in os.listdir(path):
+        csv = pd.read_csv(path + file)
+        #Optional remove Volumes
+        del csv["Volume"]
+        del csv["VolumeBTC"]
+        if file == "BTC.csv":
+            USDBTC = csv["Open"].values[::-1]
+        else:
+
+            csv["Open"] = csv["Open"].values[::-1]
+            csv["Open"] = csv["Open"] * USDBTC[:len(csv["Open"])]
+            csv["Open"] = csv["Open"].values[::-1]
+
+            csv["High"] = csv["High"].values[::-1]
+            csv["High"] = csv["High"] * USDBTC[:len(csv["Open"])]
+            csv["High"] = csv["High"].values[::-1]
+
+            csv["Low"] = csv["Low"].values[::-1]
+            csv["Low"] = csv["Low"] * USDBTC[:len(csv["Open"])]
+            csv["Low"] = csv["Low"].values[::-1]
+
+            csv["Close"] = csv["Close"].values[::-1]
+            csv["Close"] = csv["Close"] * USDBTC[:len(csv["Open"])]
+            csv["Close"] = csv["Close"].values[::-1]
+
+        csv.to_csv("../" + name_folder + "/" + folder_step_half+"/"+file,index=False)
+
 
     # ------------------------------------------
     # STEP.1: Add Additional Features
@@ -54,10 +101,11 @@ def run(fd, COINS):
     # Performs indicators: RSI, SMA, EMA
     # Over 14, 30, 60 previous days
     lookback = [14, 30, 60]
-    for each_stock in os.listdir(raw_data):
+    path="../" + name_folder + "/" + folder_step_half+"/"
+    for each_stock in os.listdir(path):
         name = each_stock.replace(".csv", "")
         if name in COINS:
-            file = raw_data + each_stock
+            file = path + each_stock
             preprocessing.generate_indicators(file, "Close", lookback, output_indicators_path, name)
 
 
@@ -95,11 +143,13 @@ def run(fd, COINS):
     else:
         print("Successfully created the directory %s " % folder_step_three)
 
+    data_path = "../" + name_folder + "/" + folder_step_half + "/"
     fileToWrite = open("../" + name_folder + "/" + folder_step_three + "/all.csv", "w+")
     prima_volta=True
-    for stock in os.listdir(raw_data):
-        if stock in COINS:
-            fileToRead=open(raw_data+stock, "r")
+    for stock in os.listdir(data_path):
+        coin = stock.replace(".csv", "")
+        if coin in COINS:
+            fileToRead=open(data_path+stock, "r")
             if prima_volta:
                 prima_volta=False
             else:
@@ -107,34 +157,38 @@ def run(fd, COINS):
             for line in fileToRead:
                 fileToWrite.write(line)
             fileToRead.close()
-        fileToWrite.close()
+    fileToWrite.close()
 
     data_path = "../" + name_folder + "/" + folder_step_one + "/"
     fileToWrite = open("../" + name_folder + "/" + folder_step_three + "/all_with_indicators.csv", "w+")
     prima_volta=True
     for stock in os.listdir(data_path):
-        fileToRead=open(data_path+stock, "r")
-        if prima_volta:
-            prima_volta=False
-        else:
-            fileToRead.readline()
-        for line in fileToRead:
-            fileToWrite.write(line)
-        fileToRead.close()
+        coin = stock.replace("_with_indicators.csv", "")
+        if coin in COINS:
+            fileToRead=open(data_path+stock, "r")
+            if prima_volta:
+                prima_volta=False
+            else:
+                fileToRead.readline()
+            for line in fileToRead:
+                fileToWrite.write(line)
+            fileToRead.close()
     fileToWrite.close()
 
     data_path = "../" + name_folder + "/" + folder_step_two + "/"
     fileToWrite = open("../" + name_folder + "/" + folder_step_three + "/all_normalized.csv", "w+")
     prima_volta=True
     for stock in os.listdir(data_path):
-        fileToRead=open(data_path+stock, "r")
-        if prima_volta:
-            prima_volta=False
-        else:
-            fileToRead.readline()
-        for line in fileToRead:
-            fileToWrite.write(line)
-        fileToRead.close()
+        coin = stock.replace(".csv", "")
+        if coin in COINS:
+            fileToRead=open(data_path+stock, "r")
+            if prima_volta:
+                prima_volta=False
+            else:
+                fileToRead.readline()
+            for line in fileToRead:
+                fileToWrite.write(line)
+            fileToRead.close()
     fileToWrite.close()
 
 
@@ -159,7 +213,7 @@ def run(fd, COINS):
             print("Successfully created the directory %s " % folder_step_four + step)
 
         if step=="":
-            folder_data = folder_step_zero
+            folder_data = folder_step_half
         else:
             folder_data = folder_step_one
 

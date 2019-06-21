@@ -71,10 +71,11 @@ TEST_SET = test_set.get_testset("../crypto_testset/from_2016_07_01_until_2017_06
 #EXPERIMENT THREE = multi target (MT)
 #EXPERIMENT FOUR = multi target with indicators (MT-i)
 
-#It is possible to run them all but sometimes the RAM becomes full (some kind of memory leak) and execution becomes slow as hell
+#It is possible to run them all at once but sometimes the RAM becomes full and the execution becomes very very slow
 #So we suggests to run one experiment at a time commenting the others
 #Also delete previous results and their folder before running
 
+'''
 #
 # # ------------------------------------ EXPERIMENT ONE (single + basic) ------------------------------------
 EXPERIMENT_ONE = "../SingleTarget_Data"
@@ -123,3 +124,5 @@ multi_target(EXPERIMENT=EXPERIMENT_FOUR, DATA_PATH=DATA_PATH_FOUR, TENSOR_DATA_P
              temporal_sequence=temporal_sequence_considered,
              number_neurons=number_neurons_LSTM, learning_rate=learning_rate, dimension_last_layer=dimension_last_layer,
              features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling, testing_set=TEST_SET)
+
+'''

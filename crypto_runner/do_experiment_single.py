@@ -100,6 +100,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
                 print("Predico per: ", pd.to_datetime(data_tester))
                 print("Ho predetto: ", test_prediction)
                 print("Valore Reale: ", y_test)
+                print("\n")
                 y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, 1))
                 test_prediction_denorm = scaler.inverse_transform(test_prediction)
 

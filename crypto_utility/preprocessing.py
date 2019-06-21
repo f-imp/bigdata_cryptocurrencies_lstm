@@ -5,12 +5,16 @@ from sklearn.preprocessing import MinMaxScaler
 
 def generate_indicators(filepath, name_feature, lookback_list, output_path, filename_output):
     data = pd.read_csv(filepath, sep=',')
+    data["DateTime"] = pd.to_datetime(data["DateTime"])
+    data = data.sort_values('DateTime', ascending=True)
+    '''
     if filepath.count("BTC") > 0:
         data["DateTime"] = pd.to_datetime(data["DateTime"], dayfirst=True)
         data = data.sort_values('DateTime', ascending=True)
     else:
         data["DateTime"] = pd.to_datetime(data["DateTime"])
         data = data.sort_values('DateTime', ascending=True)
+    '''
     #data = data.sort_values('DateTime')
     data_series_of_feature = data[name_feature]
     for lookback_value in lookback_list:

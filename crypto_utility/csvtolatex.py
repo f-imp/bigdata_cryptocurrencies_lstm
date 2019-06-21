@@ -147,10 +147,10 @@ days=[30,100,200]
 #COINS=['BTC', 'DASH', 'DOGE', 'ETC', 'ETH', 'LTC', 'XEM', 'XLM', 'XMR', 'XRP']
 
 #TOP8
-COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XEM', 'XLM', 'XMR', 'XRP']
+#COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XEM', 'XLM', 'XMR', 'XRP']
 
 #TOP5
-#COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XLM']
+COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XLM']
 
 table1_mezzo=""
 
