@@ -81,7 +81,7 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
         os.mkdir(EXPERIMENT + "/" + MODELS_PATH + "/" + configuration_name + "/" + best_model)
 
         for data_tester in testing_set:
-            print(data_tester)
+            print("Addestro fino a: ", pd.to_datetime(data_tester))
             train, test = experiments.train_test_split_w_date(features, dataset_tensor, data_tester)
             train = train[:, :, 1:]
             test = test[:, :, 1:]
@@ -110,7 +110,9 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
 
             # Tiriamo fuori la predizione per ogni esempio di test
             test_prediction = model.predict(x_test)
-
+            print("Predico per: ", pd.to_datetime(data_tester))
+            print("Ho predetto: ", test_prediction)
+            print("Valore Reale: ", y_test)
             y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, dimension_last_layer))
 
             test_prediction_denorm = scaler.inverse_transform(test_prediction)

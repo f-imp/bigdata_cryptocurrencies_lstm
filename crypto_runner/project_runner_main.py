@@ -15,22 +15,22 @@ warnings.filterwarnings("ignore")
 #build_testset_dates.run()
 
 #set the day to use to cut the data (the first day to use in training, should be the first day of the cryptocurrency with less entry)
-#first_day ="2015-03-30" #Top8 Nem first day
-#cryptocurrenciesSymbols=["BTC","XRP","LTC","XLM","XMR","DASH","XEM","DOGE"] #Top8
+first_day ="2015-03-30" #Top8 Nem first day
+cryptocurrenciesSymbols=["BTC","XRP","LTC","XLM","XMR","DASH","XEM","DOGE"] #Top8
 
-first_day = "2014-09-03" #Top5 Stellar first day
-cryptocurrenciesSymbols=["BTC","LTC","XLM","DASH","DOGE"] #Top5
+#first_day = "2014-09-03" #Top5 Stellar first day
+#cryptocurrenciesSymbols=["BTC","LTC","XLM","DASH","DOGE"] #Top5
 
 #Preprocess dataset data (Relaunch preprocessing if data changes)
-#do_preprocessing.run(first_day,cryptocurrenciesSymbols)
+do_preprocessing.run(first_day,cryptocurrenciesSymbols)
 
 #
 # # -------- PARAMETERS ----------------------------------------------------------------------------
 #LSTM Parameters
 temporal_sequence_considered = [30, 100, 200]
 number_neurons_LSTM = [128, 256]
-#learning_rate=0.001 #Top8
-learning_rate=0.0001 #Top5
+learning_rate=0.001 #Top8
+#learning_rate=0.0001 #Top5
 
 
 #
@@ -40,12 +40,12 @@ DATA_PATHS=["../crypto_preprocessing/step4_cutdata/","../crypto_preprocessing/st
 
 #Indicate the features that will be excluded from the scaling operations
 SINGLE_features_to_exclude_from_scaling = ['Symbol']
-#MULTI_features_to_exclude_from_scaling = ['Symbol_1', 'Symbol_2', 'Symbol_3', 'Symbol_4', 'Symbol_5', 'Symbol_6', 'Symbol_7', 'Symbol_8'] #Top8
-MULTI_features_to_exclude_from_scaling = ['Symbol_1', 'Symbol_2', 'Symbol_3', 'Symbol_4', 'Symbol_5'] #Top5
+MULTI_features_to_exclude_from_scaling = ['Symbol_1', 'Symbol_2', 'Symbol_3', 'Symbol_4', 'Symbol_5', 'Symbol_6', 'Symbol_7', 'Symbol_8'] #Top8
+#MULTI_features_to_exclude_from_scaling = ['Symbol_1', 'Symbol_2', 'Symbol_3', 'Symbol_4', 'Symbol_5'] #Top5
 
 #set dimension for last layer in multitarget
-#dimension_last_layer=8 #Top8
-dimension_last_layer=5 #Top5
+dimension_last_layer=8 #Top8
+#dimension_last_layer=5 #Top5
 
 #
 # # -------- TENSORS ----------------------------------------------------------------------------

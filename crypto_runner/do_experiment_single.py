@@ -39,7 +39,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
             # stock_name = s.replace("_normalized.csv", "")
         #    stock_name = s.replace("_with_indicators.csv", "")
         #else:
-        stock_name = s.replace(".csv", "")
+        stock_name = s.replace("_with_indicators", "").replace(".csv", "")
         # for each stock
         # create a folder for data
         os.makedirs(TENSOR_DATA_PATH + "/" + stock_name, exist_ok=True)
@@ -71,6 +71,7 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
             os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name)
             os.mkdir(EXPERIMENT + "/" + RESULT_PATH + "/" + stock_name + "/" + configuration_name + "/" + statistics)
             for data_tester in testing_set:
+                print("Addestro fino a: ", pd.to_datetime(data_tester))
                 train, test = experiments.train_test_split_w_date(features, dataset_tensor, data_tester)
                 train = train[:, :, 1:]
                 test = test[:, :, 1:]
@@ -96,6 +97,9 @@ def single_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, nu
                                                              model_path=EXPERIMENT + "/" + MODELS_PATH + "/" + stock_name + "/" + configuration_name + "/" + best_model + "/")
                 # Tiriamo fuori la predizione per ogni esempio di test
                 test_prediction = model.predict(x_test)
+                print("Predico per: ", pd.to_datetime(data_tester))
+                print("Ho predetto: ", test_prediction)
+                print("Valore Reale: ", y_test)
                 y_test_denorm = scaler.inverse_transform(y_test.reshape(-1, 1))
                 test_prediction_denorm = scaler.inverse_transform(test_prediction)
 
