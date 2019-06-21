@@ -93,8 +93,7 @@ print(w, p)
 
 print("\n\nLATEX TABLE CODE \n\n")
 
-table=f"""\section{{Statistical Tests}}
-\subsection{{Statistical Tests}}\n
+table=f"""\subsection{{Statistical Tests}}\n
 \\begin{{frame}}{{Statistical Tests}}
 \\begin{{block}}{{Wilcoxon signed-rank test}}
 \\begin{{table}}[]

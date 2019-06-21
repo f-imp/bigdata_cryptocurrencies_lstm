@@ -26,8 +26,7 @@ table2_fine="""    \end{{tabular}}
 \end{{block}}
 \end{{frame}}"""
 
-pretable3="""\section{Results Average}
-\subsection{Results Average}\n"""
+pretable3="""\subsection{Results Average}\n"""
 
 table3="""\\begin{{frame}}{{Results - Neurons Average}}
 \\begin{{block}}{{Average RMSE}}
@@ -148,10 +147,10 @@ days=[30,100,200]
 #COINS=['BTC', 'DASH', 'DOGE', 'ETC', 'ETH', 'LTC', 'XEM', 'XLM', 'XMR', 'XRP']
 
 #TOP8
-#COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XEM', 'XLM', 'XMR', 'XRP']
+COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XEM', 'XLM', 'XMR', 'XRP']
 
 #TOP5
-COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XLM']
+#COINS=['BTC', 'DASH', 'DOGE', 'LTC', 'XLM']
 
 table1_mezzo=""
 
