@@ -2,8 +2,6 @@ from crypto_runner.do_experiment_single import single_target
 from crypto_runner.do_experiment_multi import multi_target
 from crypto_utility import test_set,experiments,tensor_data
 from crypto_runner import do_preprocessing,build_testset_dates
-from crypto_utility.report_data import report_configurations_SingleTarget, report_stockseries_SingleTarget
-from crypto_utility.report_data import report_configurations_MultiTarget, report_stockseries_MultiTarget
 
 import warnings
 

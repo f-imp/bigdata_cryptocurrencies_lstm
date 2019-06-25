@@ -115,9 +115,9 @@ for date_pred in dates_to_use:
         train_model.fillna(0, inplace=True)
         y_test = new_model[test_tf:test_tf].values[0]
 
-        lag_order = 3
         model = VAR(train_model)
-        results = model.fit(lag_order)
+        results = model.fit(maxlags=3, ic='aic')
+        lag_order = results.k_ar
         y_predicted = results.forecast(train_model.values[-lag_order:], 1)[0]
 
         os.makedirs(out_path, exist_ok=True)
