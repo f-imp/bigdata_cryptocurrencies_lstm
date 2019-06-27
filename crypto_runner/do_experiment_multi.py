@@ -3,8 +3,7 @@ import numpy as np
 import pandas as pd
 from itertools import product
 from crypto_utility import experiments
-from crypto_utility.report_data import report_configurations_MultiTarget, report_stockseries_MultiTarget
-from crypto_utility.report_data import report_configurations_SingleTarget, report_stockseries_SingleTarget
+from crypto_utility.report_data import report_configurations, report_stockseries
 
 np.random.seed(0)
 
@@ -168,20 +167,12 @@ def multi_target(EXPERIMENT, DATA_PATH, TENSOR_DATA_PATH, temporal_sequence, num
 
 
     #commentare se non si vuole generare i report alla fine dell'addestramento
-    report_configurations_SingleTarget(temporal_sequence_used=temporal_sequence, neurons_used=number_neurons,
+    report_configurations(temporal_sequence_used=temporal_sequence, neurons_used=number_neurons,
                                name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                                name_folder_report=REPORT_FOLDER_NAME, name_output_files="overall_report")
 
-    report_stockseries_SingleTarget(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
+    report_stockseries(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
                             name_folder_report=REPORT_FOLDER_NAME,
                             name_files_output="report")
-    '''
-    report_configurations_MultiTarget(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
-                                      name_folder_report=REPORT_FOLDER_NAME, name_files_output="overall_report")
 
-    report_stockseries_MultiTarget(name_folder_experiment=EXPERIMENT, name_folder_result_experiment=RESULT_PATH,
-                                   name_folder_report=REPORT_FOLDER_NAME, name_files_output="report",
-                                   original_datapath=DATA_PATH,
-                                   features_to_exclude_from_scaling=features_to_exclude_from_scaling)
-    '''
     return

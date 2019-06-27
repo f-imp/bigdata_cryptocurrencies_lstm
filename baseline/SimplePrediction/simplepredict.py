@@ -7,8 +7,8 @@ from math import sqrt
 dates_to_use = '../../crypto_testset/from_2016_07_01_until_2017_06_26/test_set.txt'
 
 
-PATH="../../crypto_preprocessing/step4_cutdata"
-#PATH="../../crypto_preprocessing/step2_normalized" normalized?
+#PATH="../../crypto_preprocessing/step4_cutdata"
+PATH="../../crypto_preprocessing/step2_normalized" #normalized
 
 result_folder="results"
 partial_folder="stocks"
@@ -54,8 +54,8 @@ for csv in os.listdir(PATH):
             for line in f:
                 if line.count(data):
                     line=line.split(",")
-                    toWrite.append(csv.replace(".csv","") + "," + data + "," + line[1] + "," + line[4])
-                    #toWrite.append(csv.replace(".csv","") + "," + data + "," + line[17] + "," + line[20]) normalized?
+                    #toWrite.append(csv.replace(".csv","") + "," + data + "," + line[1] + "," + line[4])
+                    toWrite.append(csv.replace(".csv","") + "," + data + "," + line[17] + "," + line[20]) #normalized
                     break
             f.seek(0)
 

@@ -2,8 +2,6 @@ from crypto_runner.do_experiment_single import single_target
 from crypto_runner.do_experiment_multi import multi_target
 from crypto_utility import test_set,experiments,tensor_data
 from crypto_runner import do_preprocessing,build_testset_dates
-from crypto_utility.report_data import report_configurations_SingleTarget, report_stockseries_SingleTarget
-from crypto_utility.report_data import report_configurations_MultiTarget, report_stockseries_MultiTarget
 
 import warnings
 
@@ -54,7 +52,7 @@ TENSOR_PATH = "../crypto_TensorData"
 
 #Generate tensors based on preprocessed data (Relaunch if data changes)
 #Top8 and Top5 use different Tensors be sure to use the right ones
-#tensor_data.generate(DATA_PATHS[:-1], TENSOR_PATH, temporal_sequence_considered, SINGLE_features_to_exclude_from_scaling, MULTI_features_to_exclude_from_scaling)
+tensor_data.generate(DATA_PATHS[:-1], TENSOR_PATH, temporal_sequence_considered, SINGLE_features_to_exclude_from_scaling, MULTI_features_to_exclude_from_scaling)
 
 #
 # # -------- TEST SET ----------------------------------------------------------------------------
@@ -75,7 +73,7 @@ TEST_SET = test_set.get_testset("../crypto_testset/from_2016_07_01_until_2017_06
 #So we suggests to run one experiment at a time commenting the others
 #Also delete previous results and their folder before running
 
-'''
+
 #
 # # ------------------------------------ EXPERIMENT ONE (single + basic) ------------------------------------
 EXPERIMENT_ONE = "../SingleTarget_Data"
@@ -124,5 +122,3 @@ multi_target(EXPERIMENT=EXPERIMENT_FOUR, DATA_PATH=DATA_PATH_FOUR, TENSOR_DATA_P
              temporal_sequence=temporal_sequence_considered,
              number_neurons=number_neurons_LSTM, learning_rate=learning_rate, dimension_last_layer=dimension_last_layer,
              features_to_exclude_from_scaling=MULTI_features_to_exclude_from_scaling, testing_set=TEST_SET)
-
-'''

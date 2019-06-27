@@ -8,7 +8,7 @@ from crypto_utility import experiments
 from crypto_utility.experiments import get_RMSE
 
 
-def report_configurations_SingleTarget(temporal_sequence_used, neurons_used, name_folder_experiment,
+def report_configurations(temporal_sequence_used, neurons_used, name_folder_experiment,
                                        name_folder_result_experiment, name_folder_report, name_output_files):
     kind_of_report = "configurations_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
@@ -47,11 +47,11 @@ def report_configurations_SingleTarget(temporal_sequence_used, neurons_used, nam
         x_data="model", column_of_data="mean_rmse_norm", label_for_values_column="RMSE (Average)",
         label_x="Configurations", title_img="Average RMSE - Configurations Oriented",
         destination=name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/",
-        name_file_output="singletarget_bargraph_RMSE_configurations_oriented")
+        name_file_output="bargraph_RMSE_configurations_oriented")
     return
 
 
-def report_stockseries_SingleTarget(name_folder_experiment, name_folder_result_experiment, name_folder_report,
+def report_stockseries(name_folder_experiment, name_folder_result_experiment, name_folder_report,
                                     name_files_output):
     kind_of_report = "stockseries_oriented"
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
@@ -87,7 +87,7 @@ def report_stockseries_SingleTarget(name_folder_experiment, name_folder_result_e
             x_data="configuration", column_of_data="RMSE_normalized", label_for_values_column="RMSE (Average)",
             label_x="Configurations", title_img="Average RMSE - " + str(s),
             destination=name_folder_experiment + "/" + name_folder_report + "/" + kind_of_report + "/" + s + "/",
-            name_file_output="singletarget_bargraph_RMSE_" + str(s))
+            name_file_output="bargraph_RMSE_" + str(s))
     return
 
 
@@ -110,7 +110,7 @@ def plot_report(path_file, x_data, column_of_data, label_for_values_column, labe
     # plt.show()
     return
 
-
+#not used anymore
 def report_configurations_exp2(name_folder_experiment, name_folder_result_experiment, name_folder_report,
                                name_files_output):
     os.makedirs(name_folder_experiment + "/" + name_folder_report + "/", exist_ok=True)
@@ -142,7 +142,7 @@ def report_configurations_exp2(name_folder_experiment, name_folder_result_experi
             name_file_output="bargraph_RMSE_configurations_oriented")
     return
 
-
+#not used anymore
 def report_configurations_MultiTarget(name_folder_experiment, name_folder_result_experiment, name_folder_report,
                                       name_files_output):
     kind_of_report = "configurations_oriented"
@@ -176,7 +176,7 @@ def report_configurations_MultiTarget(name_folder_experiment, name_folder_result
         name_file_output="multitarget_bargraph_RMSE_configurations_oriented")
     return
 
-
+#not used anymore
 def report_stockseries_MultiTarget(name_folder_experiment, name_folder_result_experiment,
                                    name_folder_report, name_files_output, original_datapath,
                                    features_to_exclude_from_scaling):

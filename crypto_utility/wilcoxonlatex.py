@@ -33,7 +33,7 @@ data=[]
 
 
 for path in PATHS:
-    csv = "../top8Result/" + path + "/Report/stockseries_oriented/"
+    csv = "../" + path + "/Report/stockseries_oriented/"
     data1=[]
     for coin in COINS:
         for neur,dayz in product(neuroni,days):

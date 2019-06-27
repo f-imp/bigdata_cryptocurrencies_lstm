@@ -14,6 +14,8 @@ days=[30,100,200]
 
 COINS=["BTC","DASH","DOGE","LTC","XEM","XLM","XMR","XRP"]
 
+#COINS=["BTC","DASH","DOGE","LTC","XLM"]
+
 data=[]
 
 from itertools import product
