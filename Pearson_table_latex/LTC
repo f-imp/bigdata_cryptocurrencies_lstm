@@ -1,0 +1,19 @@
+\begin{center} 
+ \begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+ - & Open & High & Low & Close & Volume & VolumeBTC \\
+\hline\hline
+Open & 1.0 & 0.95 & 0.96 & 0.95 & \textcolor{red}{\textbf{0.02}} & \textcolor{red}{\textbf{0.03}} \\
+ \hline 
+High & 0.95 & 1.0 & 0.95 & 0.99 & \textcolor{red}{\textbf{0.03}} & \textcolor{red}{\textbf{0.04}} \\
+ \hline 
+Low & 0.96 & 0.95 & 1.0 & 0.96 & \textcolor{red}{\textbf{0.02}} & \textcolor{red}{\textbf{0.03}} \\
+ \hline 
+Close & 0.95 & 0.99 & 0.96 & 1.0 & \textcolor{red}{\textbf{0.03}} & \textcolor{red}{\textbf{0.04}} \\
+ \hline 
+Volume & \textcolor{red}{\textbf{0.02}} & \textcolor{red}{\textbf{0.03}} & \textcolor{red}{\textbf{0.02}} & \textcolor{red}{\textbf{0.03}} & 1.0 & 1.0 \\
+ \hline 
+VolumeBTC & \textcolor{red}{\textbf{0.03}} & \textcolor{red}{\textbf{0.04}} & \textcolor{red}{\textbf{0.03}} & \textcolor{red}{\textbf{0.04}} & 1.0 & 1.0 \\
+ \hline 
+\end{tabular}
+ \end{center}

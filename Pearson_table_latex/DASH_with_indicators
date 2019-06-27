@@ -1,0 +1,33 @@
+\begin{center} 
+ \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+ - & Open & High & Low & Close & RSI14 & SMA14 & EMA14 & RSI30 & SMA30 & EMA30 & RSI60 & SMA60 & EMA60 \\
+\hline\hline
+Open & 1.0 & 1.0 & 1.0 & 1.0 & \textcolor{red}{\textbf{0.27}} & 0.99 & 0.99 & \textcolor{red}{\textbf{0.32}} & 0.98 & 0.99 & \textcolor{red}{\textbf{0.35}} & 0.97 & 0.98 \\
+ \hline 
+High & 1.0 & 1.0 & 1.0 & 1.0 & \textcolor{red}{\textbf{0.29}} & 0.99 & 0.99 & \textcolor{red}{\textbf{0.34}} & 0.97 & 0.98 & \textcolor{red}{\textbf{0.37}} & 0.96 & 0.98 \\
+ \hline 
+Low & 1.0 & 1.0 & 1.0 & 1.0 & \textcolor{red}{\textbf{0.28}} & 0.99 & 0.99 & \textcolor{red}{\textbf{0.32}} & 0.98 & 0.99 & \textcolor{red}{\textbf{0.35}} & 0.97 & 0.98 \\
+ \hline 
+Close & 1.0 & 1.0 & 1.0 & 1.0 & \textcolor{red}{\textbf{0.29}} & 0.99 & 0.99 & \textcolor{red}{\textbf{0.34}} & 0.98 & 0.98 & \textcolor{red}{\textbf{0.36}} & 0.96 & 0.98 \\
+ \hline 
+RSI14 & \textcolor{red}{\textbf{0.27}} & \textcolor{red}{\textbf{0.29}} & \textcolor{red}{\textbf{0.28}} & \textcolor{red}{\textbf{0.29}} & 1.0 & \textcolor{red}{\textbf{0.23}} & \textcolor{red}{\textbf{0.24}} & 0.94 & \textcolor{red}{\textbf{0.2}} & \textcolor{red}{\textbf{0.21}} & 0.84 & \textcolor{red}{\textbf{0.18}} & \textcolor{red}{\textbf{0.2}} \\
+ \hline 
+SMA14 & 0.99 & 0.99 & 0.99 & 0.99 & \textcolor{red}{\textbf{0.23}} & 1.0 & 1.0 & \textcolor{red}{\textbf{0.28}} & 0.99 & 1.0 & \textcolor{red}{\textbf{0.31}} & 0.98 & 0.99 \\
+ \hline 
+EMA14 & 0.99 & 0.99 & 0.99 & 0.99 & \textcolor{red}{\textbf{0.24}} & 1.0 & 1.0 & \textcolor{red}{\textbf{0.29}} & 0.99 & 1.0 & \textcolor{red}{\textbf{0.32}} & 0.98 & 0.99 \\
+ \hline 
+RSI30 & \textcolor{red}{\textbf{0.32}} & \textcolor{red}{\textbf{0.34}} & \textcolor{red}{\textbf{0.32}} & \textcolor{red}{\textbf{0.34}} & 0.94 & \textcolor{red}{\textbf{0.28}} & \textcolor{red}{\textbf{0.29}} & 1.0 & \textcolor{red}{\textbf{0.25}} & \textcolor{red}{\textbf{0.26}} & 0.96 & \textcolor{red}{\textbf{0.22}} & \textcolor{red}{\textbf{0.24}} \\
+ \hline 
+SMA30 & 0.98 & 0.97 & 0.98 & 0.98 & \textcolor{red}{\textbf{0.2}} & 0.99 & 0.99 & \textcolor{red}{\textbf{0.25}} & 1.0 & 1.0 & \textcolor{red}{\textbf{0.28}} & 0.99 & 1.0 \\
+ \hline 
+EMA30 & 0.99 & 0.98 & 0.99 & 0.98 & \textcolor{red}{\textbf{0.21}} & 1.0 & 1.0 & \textcolor{red}{\textbf{0.26}} & 1.0 & 1.0 & \textcolor{red}{\textbf{0.3}} & 0.99 & 1.0 \\
+ \hline 
+RSI60 & \textcolor{red}{\textbf{0.35}} & \textcolor{red}{\textbf{0.37}} & \textcolor{red}{\textbf{0.35}} & \textcolor{red}{\textbf{0.36}} & 0.84 & \textcolor{red}{\textbf{0.31}} & \textcolor{red}{\textbf{0.32}} & 0.96 & \textcolor{red}{\textbf{0.28}} & \textcolor{red}{\textbf{0.3}} & 1.0 & \textcolor{red}{\textbf{0.25}} & \textcolor{red}{\textbf{0.27}} \\
+ \hline 
+SMA60 & 0.97 & 0.96 & 0.97 & 0.96 & \textcolor{red}{\textbf{0.18}} & 0.98 & 0.98 & \textcolor{red}{\textbf{0.22}} & 0.99 & 0.99 & \textcolor{red}{\textbf{0.25}} & 1.0 & 1.0 \\
+ \hline 
+EMA60 & 0.98 & 0.98 & 0.98 & 0.98 & \textcolor{red}{\textbf{0.2}} & 0.99 & 0.99 & \textcolor{red}{\textbf{0.24}} & 1.0 & 1.0 & \textcolor{red}{\textbf{0.27}} & 1.0 & 1.0 \\
+ \hline 
+\end{tabular}
+ \end{center}
